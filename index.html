@@ -4,135 +4,137 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>ReJaibreack</title>
+<title>ReJaibreack</title>
 
-    <script type="text/javascript" src="utils.js"></script>
+<script type="text/javascript" src="utils.js"></script>
 
-    <script type="text/javascript" src="helper.js"></script>
+<script type="text/javascript" src="helper.js"></script>
 
-    <script type="text/javascript" src="int64.js"></script>
+<script type="text/javascript" src="int64.js"></script>
 
-    <script type="text/javascript" src="stages.js"></script>
+<script type="text/javascript" src="stages.js"></script>
 
-    <script type="text/javascript" src="offsets.js"></script>
+<script type="text/javascript" src="offsets.js"></script>
 
-    <script type="text/javascript" src="pwn.js"></script>
+<script type="text/javascript" src="pwn.js"></script>
 
-    <script>
+<script>
 
-        var loc = window.location;
+var loc = window.location;
 
-        var wsProtocol = loc.protocol === 'https:' ? 'wss:' : 'ws:';
+var wsProtocol = loc.protocol === 'https:' ? 'wss:' : 'ws:';
 
-        var wsURL = wsProtocol + '//' + loc.host + '/WebSocket';
+var wsURL = wsProtocol + '//' + loc.host + '/WebSocket';
 
-        try {
+try {
 
-            var ws = new WebSocket(wsURL);
+    var ws = new WebSocket(wsURL);
 
-            ws.onopen = function() {
+    ws.onopen = function() {
 
-                ws.send("totally-not-spyware-v2");
+        ws.send("totally-not-spyware-v2");
 
-            };
+    };
 
-        } catch (error) {
+} catch (error) {
 
-            void(0);
+    void(0);
 
-        }
+}
 
-    </script>
+</script>
 
-    <style>
+<style>
 
-        body{
+body{
 
-            font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+    font-family:-apple-system,BlinkMacSystemFont,sans-serif;
 
-            max-width:850px;
+    max-width:850px;
 
-            margin:auto;
+    margin:auto;
 
-            padding:25px;
+    padding:25px;
 
-            background:#fff;
+    background:#fff;
 
-            color:#111;
+    color:#111;
 
-            line-height:1.7;
+    line-height:1.7;
 
-        }
+}
 
-        h1{
+h1{
 
-            font-size:42px;
+    font-size:42px;
 
-            margin-bottom:10px;
+    margin-bottom:10px;
 
-        }
+}
 
-        .button{
+.button{
 
-            background:#e9e9ed;
+    background:#e9e9ed;
 
-            color:#007aff;
+    color:#007aff;
 
-            padding:12px 28px;
+    padding:12px 28px;
 
-            border:none;
+    border:none;
 
-            border-radius:30px;
+    border-radius:30px;
 
-            font-size:22px;
+    font-size:22px;
 
-            cursor:pointer;
+    cursor:pointer;
 
-            margin:20px 0;
+    margin:20px 0;
 
-        }
+}
 
-        .button:hover{
+.button:hover{
 
-            background:#dcdce0;
+    background:#dcdce0;
 
-        }
+}
 
-        #log{
+#log{
 
-            color:red;
+    color:red;
 
-            margin-bottom:20px;
+    margin-bottom:20px;
 
-        }
+}
 
-        #status{
+#status{
 
-            color:#007aff;
+    color:#007aff;
 
-            font-weight:bold;
+    font-weight:bold;
 
-            margin-top:10px;
+    margin-top:10px;
 
-        }
+}
 
-        h2{
+h2{
 
-            margin-top:35px;
+    margin-top:35px;
 
-        }
+}
 
-        ol li{
+ol li,
 
-            margin-bottom:10px;
+ul li{
 
-        }
+    margin-bottom:10px;
 
-    </style>
+}
+
+</style>
 
 </head>
 
@@ -188,7 +190,7 @@ function startJB() {
 
     document.getElementById("status").innerHTML =
 
-        "⏳ Đang tiến hành Jailbreak, vui lòng đợi...";
+    "⏳ Đang tiến hành Jailbreak, vui lòng đợi...";
 
     setTimeout(function() {
 
@@ -200,7 +202,7 @@ function startJB() {
 
             document.getElementById("status").innerHTML =
 
-                "❌ Jailbreak thất bại.";
+            "❌ Jailbreak thất bại.";
 
         }
 
@@ -220,7 +222,7 @@ Công cụ hỗ trợ khởi chạy lại jailbreak bằng Chimera trên các th
 
 <button class="button" onclick="startJB();">
 
-    Khởi chạy
+Khởi chạy
 
 </button>
 
@@ -230,25 +232,13 @@ Công cụ hỗ trợ khởi chạy lại jailbreak bằng Chimera trên các th
 
 <ul>
 
-    <li>Hỗ trợ jailbreak bằng Chimera.</li>
+<li>Hỗ trợ jailbreak bằng Chimera.</li>
 
-    <li>Giao diện đơn giản, dễ sử dụng.</li>
+<li>Giao diện đơn giản, dễ sử dụng.</li>
 
-    <li>Khởi chạy nhanh chỉ với một nút bấm.</li>
+<li>Khởi chạy nhanh chỉ với một nút bấm.</li>
 
-    <li>Tối ưu cho iPhone và iPad.</li>
-
-</ul>
-
-<h2>Thông tin</h2>
-
-<ul>
-
-    <li>Jailbreak hỗ trợ: Chimera</li>
-
-    <li>Ngôn ngữ: Tiếng Việt</li>
-
-    <li>Tác giả: Khanh GLI</li>
+<li>Tối ưu cho iPhone và iPad.</li>
 
 </ul>
 
@@ -256,19 +246,31 @@ Công cụ hỗ trợ khởi chạy lại jailbreak bằng Chimera trên các th
 
 <ol>
 
-    <li>Nhấn <b>Khởi chạy</b>.</li>
+<li>Nhấn <b>Khởi chạy</b>.</li>
 
-    <li>Khi xuất hiện thông báo <b>"Building JOP chain, executing stages payload!"</b>, nhấn <b>Đóng</b>.</li>
+<li>Khi xuất hiện thông báo <b>"Building JOP chain, executing stages payload!"</b>, nhấn <b>Đóng</b>.</li>
 
-    <li>Chờ quá trình re-jailbreak hoàn tất.</li>
+<li>Chờ quá trình re-jailbreak hoàn tất.</li>
 
-    <li>Khi xuất hiện thông báo <b>"re-jailbreak done"</b>, nhấn <b>"userspace reboot"</b>.</li>
+<li>Khi xuất hiện thông báo <b>"re-jailbreak done"</b>, nhấn <b>"userspace reboot"</b>.</li>
 
-    <li>Thiết bị sẽ khởi động lại userspace.</li>
+<li>Thiết bị sẽ khởi động lại userspace.</li>
 
-    <li>Hoàn tất re-Jaibreack.</li>
+<li>Hoàn tất re-Jaibreack.</li>
 
 </ol>
+
+<h2>Thông tin</h2>
+
+<ul>
+
+<li>Jailbreak hỗ trợ: Chimera</li>
+
+<li>Ngôn ngữ: Tiếng Việt</li>
+
+<li>Tác giả: Khanh GLI</li>
+
+</ul>
 
 </body>
 
