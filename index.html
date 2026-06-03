@@ -1,57 +1,177 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script type="text/javascript" src="utils.js"></script>
-    <script type="text/javascript" src="helper.js"></script>
-    <script type="text/javascript" src="int64.js"></script>
-    <script type="text/javascript" src="stages.js"></script>
-    <script type="text/javascript" src="offsets.js"></script>
-    <script type="text/javascript" src="pwn.js"></script>
-    <script>
-        var loc = window.location;
-        var wsProtocol = loc.protocol === 'https:' ? 'wss:' : 'ws:';
-        var wsURL = wsProtocol + '//' + loc.host + '/WebSocket';
-        try {
-            var ws = new WebSocket(wsURL);
-            ws.onopen = function() {
-                ws.send("totally-not-spyware-v2");
-            };
-        } catch (error) {
-            void(0);
-        }
-    </script>
-</head>
-<body>
-    <p id="log">
-    </p>
-    <script>
-    window.onerror = function(message, source, lineno, colno, error) {
-        try {
-            let ErrorName = error.name;
-        } catch (ee) {
-            document.getElementById("log").innerHTML += "<h1 style='color:red'>This browser is not supported!</h1>";
-            return true;
-        }
-        if ('InvalidStateError' == error.name) {
-            location.reload();
-        } else if ('TypeError' == error.name) {
-            location.reload();
-        } else {
-            document.getElementById("log").innerHTML += "<h1 style='color:red'>"+message+" @ "+lineno+"</h1>";
-            try {
-                ws.send(""+message+" @ "+lineno);
-            } catch (error) {
-                void(0);
-            }
-        }
-        return true;
-    };
-    </script>
 
-    <button onclick="pwn();">pwn</button>
-    
+<html lang="vi">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ReJaibreack</title>
+
+<style>
+
+body{
+
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+
+    max-width: 850px;
+
+    margin: auto;
+
+    padding: 25px;
+
+    background: #ffffff;
+
+    color: #111;
+
+    line-height: 1.7;
+
+}
+
+h1{
+
+    font-size: 42px;
+
+    margin-bottom: 10px;
+
+}
+
+.version{
+
+    color: #666;
+
+    font-size: 18px;
+
+    margin-bottom: 30px;
+
+}
+
+.button{
+
+    display: inline-block;
+
+    background: #e9e9ed;
+
+    color: #007aff;
+
+    padding: 12px 28px;
+
+    border-radius: 30px;
+
+    text-decoration: none;
+
+    font-size: 22px;
+
+    margin: 20px 0;
+
+}
+
+.button:hover{
+
+    background: #dcdce0;
+
+}
+
+.section{
+
+    margin-top: 35px;
+
+}
+
+h2{
+
+    font-size: 30px;
+
+    margin-bottom: 10px;
+
+}
+
+ul{
+
+    padding-left: 25px;
+
+}
+
+li{
+
+    margin-bottom: 8px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>ReJaibreack</h1>
+
+<div class="version">
+
+Phiên bản 1.0
+
+</div>
+
+<p>
+
+Công cụ hỗ trợ khởi chạy lại jailbreak nhanh chóng trên các thiết bị tương thích.
+
+</p>
+
+<a class="button" href="pwn://">Khởi chạy</a>
+
+<div class="section">
+
+<p>
+
+Ứng dụng giúp kích hoạt lại môi trường jailbreak mà không cần thực hiện các bước phức tạp.
+
+</p>
+
+<p>
+
+Quá trình thực hiện có thể mất từ 20–30 giây tùy theo thiết bị.
+
+</p>
+
+</div>
+
+<div class="section">
+
+<h2>Tính năng</h2>
+
+<ul>
+
+<li>Giao diện đơn giản, dễ sử dụng.</li>
+
+<li>Hỗ trợ thiết bị tương thích.</li>
+
+<li>Khởi chạy nhanh chỉ với một nút bấm.</li>
+
+<li>Tối ưu cho iPhone và iPad.</li>
+
+</ul>
+
+</div>
+
+<div class="section">
+
+<h2>Thông tin</h2>
+
+<ul>
+
+<li>Phiên bản: 1.0</li>
+
+<li>Ngôn ngữ: Tiếng Việt</li>
+
+<li>Tác giả: Khanh</li>
+
+</ul>
+
+</div>
+
 </body>
+
 </html>
