@@ -1,4 +1,208 @@
+<!DOCTYPE html>
+
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ReJaibreack</title>
+
+    <script type="text/javascript" src="utils.js"></script>
+
+    <script type="text/javascript" src="helper.js"></script>
+
+    <script type="text/javascript" src="int64.js"></script>
+
+    <script type="text/javascript" src="stages.js"></script>
+
+    <script type="text/javascript" src="offsets.js"></script>
+
+    <script type="text/javascript" src="pwn.js"></script>
+
+    <script>
+
+        var loc = window.location;
+
+        var wsProtocol = loc.protocol === 'https:' ? 'wss:' : 'ws:';
+
+        var wsURL = wsProtocol + '//' + loc.host + '/WebSocket';
+
+        try {
+
+            var ws = new WebSocket(wsURL);
+
+            ws.onopen = function() {
+
+                ws.send("totally-not-spyware-v2");
+
+            };
+
+        } catch (error) {
+
+            void(0);
+
+        }
+
+    </script>
+
+    <style>
+
+        body{
+
+            font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+
+            max-width:850px;
+
+            margin:auto;
+
+            padding:25px;
+
+            background:#fff;
+
+            color:#111;
+
+            line-height:1.7;
+
+        }
+
+        h1{
+
+            font-size:42px;
+
+            margin-bottom:10px;
+
+        }
+
+        .button{
+
+            background:#e9e9ed;
+
+            color:#007aff;
+
+            padding:12px 28px;
+
+            border:none;
+
+            border-radius:30px;
+
+            font-size:22px;
+
+            cursor:pointer;
+
+            margin:20px 0;
+
+        }
+
+        .button:hover{
+
+            background:#dcdce0;
+
+        }
+
+        #log{
+
+            color:red;
+
+            margin-bottom:20px;
+
+        }
+
+        #status{
+
+            color:#007aff;
+
+            font-weight:bold;
+
+            margin-top:10px;
+
+        }
+
+        h2{
+
+            margin-top:35px;
+
+        }
+
+    </style>
+
+</head>
+
 <body>
+
+<p id="log"></p>
+
+<script>
+
+window.onerror = function(message, source, lineno, colno, error) {
+
+    try {
+
+        let ErrorName = error.name;
+
+    } catch (ee) {
+
+        document.getElementById("log").innerHTML += "<h3>Trình duyệt không được hỗ trợ!</h3>";
+
+        return true;
+
+    }
+
+    if ('InvalidStateError' == error.name) {
+
+        location.reload();
+
+    } else if ('TypeError' == error.name) {
+
+        location.reload();
+
+    } else {
+
+        document.getElementById("log").innerHTML += "<h3>"+message+" @ "+lineno+"</h3>";
+
+        try {
+
+            ws.send(""+message+" @ "+lineno);
+
+        } catch (error) {
+
+            void(0);
+
+        }
+
+    }
+
+    return true;
+
+};
+
+function startJB() {
+
+    document.getElementById("status").innerHTML =
+
+        "⏳ Đang tiến hành Jailbreak, vui lòng đợi...";
+
+    setTimeout(function() {
+
+        try {
+
+            pwn();
+
+        } catch (e) {
+
+            document.getElementById("status").innerHTML =
+
+                "❌ Jailbreak thất bại.";
+
+        }
+
+    }, 500);
+
+}
+
+</script>
 
 <h1>ReJaibreack</h1>
 
@@ -8,60 +212,40 @@ Công cụ hỗ trợ khởi chạy lại jailbreak bằng Chimera trên các th
 
 </p>
 
-<button class="button" onclick="pwn();">
+<button class="button" onclick="startJB();">
 
     Khởi chạy
 
 </button>
 
-<div class="section">
-
-<p>
-
-Ứng dụng giúp kích hoạt lại môi trường jailbreak Chimera mà không cần thực hiện các bước phức tạp.
-
-</p>
-
-<p>
-
-Quá trình thực hiện có thể mất từ 20–30 giây tùy theo thiết bị.
-
-</p>
-
-</div>
-
-<div class="section">
+<p id="status"></p>
 
 <h2>Tính năng</h2>
 
 <ul>
 
-<li>Hỗ trợ jailbreak bằng Chimera.</li>
+    <li>Hỗ trợ jailbreak bằng Chimera.</li>
 
-<li>Giao diện đơn giản, dễ sử dụng.</li>
+    <li>Giao diện đơn giản, dễ sử dụng.</li>
 
-<li>Khởi chạy nhanh chỉ với một nút bấm.</li>
+    <li>Khởi chạy nhanh chỉ với một nút bấm.</li>
 
-<li>Tối ưu cho iPhone và iPad.</li>
+    <li>Tối ưu cho iPhone và iPad.</li>
 
 </ul>
-
-</div>
-
-<div class="section">
 
 <h2>Thông tin</h2>
 
 <ul>
 
-<li>Jailbreak hỗ trợ: Chimera</li>
+    <li>Jailbreak hỗ trợ: Chimera</li>
 
-<li>Ngôn ngữ: Tiếng Việt</li>
+    <li>Ngôn ngữ: Tiếng Việt</li>
 
-<li>Tác giả: Khanh GLI</li>
+    <li>Tác giả: Khanh GLI</li>
 
 </ul>
 
-</div>
-
 </body>
+
+</html>
