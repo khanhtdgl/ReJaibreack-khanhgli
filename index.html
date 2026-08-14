@@ -2,8 +2,16 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Meta tags thiết yếu cho App Offline (PWA) trên iOS -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ReJaibreak">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="manifest" href="manifest.json">
+
 <title>Re-Jaibreack</title>
+
 <script type="text/javascript" src="utils.js"></script>
 <script type="text/javascript" src="helper.js"></script>
 <script type="text/javascript" src="int64.js"></script>
@@ -36,9 +44,9 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    -webkit-user-select: none; /* Tránh người dùng bôi đen chữ khi xài app */
 }
 
-/* Container dạng thẻ (Card) */
 .container {
     background: #ffffff;
     max-width: 750px;
@@ -48,7 +56,6 @@ body {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
-/* Tiêu đề */
 h1 {
     font-size: 38px;
     margin-top: 0;
@@ -66,7 +73,6 @@ h1 {
     font-size: 17px;
 }
 
-/* Nút bấm hiện đại */
 .button-container {
     text-align: center;
     margin: 30px 0 10px 0;
@@ -100,7 +106,6 @@ h1 {
     transform: none;
 }
 
-/* Khung Console Hacker */
 .console-wrapper {
     display: none;
     background: #000000;
@@ -127,7 +132,6 @@ h1 {
     text-align: center;
 }
 
-/* Các tiêu đề phụ */
 h2 {
     font-size: 22px;
     margin-top: 35px;
@@ -154,39 +158,16 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Tùy chỉnh thanh cuộn cho Console */
-.console-wrapper::-webkit-scrollbar {
-    width: 8px;
-}
-.console-wrapper::-webkit-scrollbar-track {
-    background: #111; 
-    border-radius: 12px;
-}
-.console-wrapper::-webkit-scrollbar-thumb {
-    background: #4af626; 
-    border-radius: 12px;
-}
+.console-wrapper::-webkit-scrollbar { width: 8px; }
+.console-wrapper::-webkit-scrollbar-track { background: #111; border-radius: 12px; }
+.console-wrapper::-webkit-scrollbar-thumb { background: #4af626; border-radius: 12px; }
 
-/* Hỗ trợ Dark Mode */
 @media (prefers-color-scheme: dark) {
-    body {
-        background-color: #000000;
-        color: #f2f2f7;
-    }
-    .container {
-        background: #1c1c1e;
-        box-shadow: 0 10px 30px rgba(255, 255, 255, 0.05);
-    }
-    .subtitle {
-        color: #aeaeb2;
-    }
-    h2 {
-        border-bottom: 1px solid #38383a;
-    }
-    .button:disabled {
-        background: #38383a;
-        color: #8e8e93;
-    }
+    body { background-color: #000000; color: #f2f2f7; }
+    .container { background: #1c1c1e; box-shadow: 0 10px 30px rgba(255, 255, 255, 0.05); }
+    .subtitle { color: #aeaeb2; }
+    h2 { border-bottom: 1px solid #38383a; }
+    .button:disabled { background: #38383a; color: #8e8e93; }
 }
 </style>
 </head>
@@ -206,7 +187,6 @@ a:hover {
         </button>
     </div>
 
-    <!-- Màn hình Console Terminal ảo -->
     <div id="consoleWrapper" class="console-wrapper">
         <div id="consoleText"></div>
     </div>
@@ -215,26 +195,24 @@ a:hover {
     <ul>
         <li>Hỗ trợ Re-jailbreak bằng Chimera.</li>
         <li>Giao diện đơn giản, hiện đại và tối ưu hóa trải nghiệm.</li>
-        <li>Khởi chạy nhanh chỉ với một nút bấm.</li>
+        <li>Hỗ trợ chạy ngoại tuyến (Không cần mạng).</li>
         <li>Tối ưu cho iPhone và iPad iOS 12.x trở xuống.</li>
     </ul>
 
     <h2>📖 Hướng dẫn sử dụng</h2>
     <ol>
-        <li>Nhấn <b>Khởi chạy ngay</b> ở phía trên.</li>
-        <li>Khi xuất hiện thông báo <b>"Building JOP chain, executing stages payload!"</b>, nhấn <b>Đóng</b>.</li>
-        <li>Chờ quá trình re-jailbreak hoàn tất.</li>
-        <li>Khi xuất hiện thông báo <b>"re-jailbreak done"</b>, nhấn <b>"userspace reboot"</b>.</li>
-        <li>Thiết bị sẽ khởi động lại userspace.</li>
-        <li>Hoàn tất re-Jailbreak.</li>
+        <li>Chọn <b>Thêm vào MH chính</b> (Add to Home Screen) trên Safari để tải App.</li>
+        <li>Mở App từ màn hình chính và nhấn <b>Khởi chạy ngay</b>.</li>
+        <li>Khi thông báo <b>"Building JOP chain..."</b> hiện ra, nhấn <b>Đóng</b>.</li>
+        <li>Chờ quá trình hoàn tất.</li>
+        <li>Khi hiện <b>"re-jailbreak done"</b>, nhấn <b>"userspace reboot"</b>.</li>
     </ol>
 
     <h2>🔧 Hướng dẫn fix YouTube cũ</h2>
     <ol>
-        <li>Mở ứng dụng <b>Sileo</b> trên thiết bị của bạn.</li>
-        <li>Thêm link nguồn sau vào Sileo: <a href="https://poomsmart.github.io" target="_blank"><b>https://poomsmart.github.io</b></a></li>
-        <li>Tìm kiếm và tải về tweak có tên là <b>Legacy</b>.</li>
-        <li>Hoàn tất cài đặt để sử dụng YouTube bình thường.</li>
+        <li>Mở ứng dụng <b>Sileo</b> trên thiết bị.</li>
+        <li>Thêm link nguồn: <a href="https://poomsmart.github.io" target="_blank"><b>https://poomsmart.github.io</b></a></li>
+        <li>Tìm và tải về tweak <b>Legacy</b> để sử dụng YouTube.</li>
     </ol>
 
     <h2>ℹ️ Thông tin</h2>
@@ -246,6 +224,17 @@ a:hover {
 </div>
 
 <script>
+// KÍCH HOẠT CHẾ ĐỘ OFFLINE
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('./sw.js').then(function(registration) {
+            console.log('Chế độ Offline đã sẵn sàng:', registration.scope);
+        }, function(err) {
+            console.log('Lỗi đăng ký Offline: ', err);
+        });
+    });
+}
+
 window.onerror = function(message, source, lineno, colno, error) {
     try {
         let ErrorName = error.name;
