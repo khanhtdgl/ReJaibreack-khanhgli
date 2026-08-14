@@ -33,27 +33,73 @@ try {
 </script>
 <style>
 /* Reset & Base Styles */
+:root {
+    --bg-color: #f2f2f7;
+    --card-bg: #ffffff;
+    --text-color: #1c1c1e;
+    --sub-text: #8e8e93;
+    --border-color: #e5e5ea;
+    --guide-bg: #f2f8ff;
+    --guide-border: #cce5ff;
+    --guide-title: #007aff;
+}
+
+[data-theme="dark"] {
+    --bg-color: #000000;
+    --card-bg: #1c1c1e;
+    --text-color: #f2f2f7;
+    --sub-text: #aeaeb2;
+    --border-color: #38383a;
+    --guide-bg: #151d29;
+    --guide-border: #1e3a5f;
+    --guide-title: #0a84ff;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 20px;
-    background-color: #f2f2f7; 
-    color: #1c1c1e;
+    background-color: var(--bg-color); 
+    color: var(--text-color);
     line-height: 1.6;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    -webkit-user-select: none; /* Tránh người dùng bôi đen chữ khi xài app */
+    -webkit-user-select: none;
+    transition: background 0.3s, color 0.3s;
 }
 
 .container {
-    background: #ffffff;
+    background: var(--card-bg);
     max-width: 750px;
     width: 100%;
     padding: 40px;
     border-radius: 24px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    position: relative;
+    transition: background 0.3s;
+}
+
+/* Nút chuyển đổi Dark/Light mode góc trên */
+.theme-toggle {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    background: var(--border-color);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+.theme-toggle:hover {
+    transform: scale(1.1);
 }
 
 h1 {
@@ -68,14 +114,26 @@ h1 {
 
 .subtitle {
     text-align: center;
-    color: #8e8e93;
-    margin-bottom: 30px;
+    color: var(--sub-text);
+    margin-bottom: 25px;
     font-size: 17px;
+}
+
+/* Trạng thái Uptime & Thiết bị */
+.status-bar {
+    display: flex;
+    justify-content: space-between;
+    background: var(--border-color);
+    padding: 10px 15px;
+    border-radius: 12px;
+    font-size: 13px;
+    margin-bottom: 20px;
+    color: var(--sub-text);
 }
 
 .button-container {
     text-align: center;
-    margin: 30px 0 10px 0;
+    margin: 20px 0 10px 0;
 }
 
 .button {
@@ -136,7 +194,7 @@ h2 {
     font-size: 22px;
     margin-top: 35px;
     padding-bottom: 8px;
-    border-bottom: 1px solid #e5e5ea;
+    border-bottom: 1px solid var(--border-color);
     display: flex;
     align-items: center;
     gap: 8px;
@@ -160,15 +218,15 @@ a:hover {
 
 /* Khung hướng dẫn cài đặt Offline */
 .offline-guide {
-    background: #f2f8ff;
-    border: 1px solid #cce5ff;
+    background: var(--guide-bg);
+    border: 1px solid var(--guide-border);
     padding: 15px 20px;
     border-radius: 16px;
     margin-top: 30px;
 }
 .offline-guide h3 {
     margin-top: 0;
-    color: #007aff;
+    color: var(--guide-title);
     font-size: 18px;
     margin-bottom: 10px;
 }
@@ -177,32 +235,47 @@ a:hover {
     font-size: 15px;
 }
 
+/* Nút cập nhật app / xóa cache */
+.update-section {
+    text-align: center;
+    margin-top: 25px;
+}
+.btn-update {
+    background: transparent;
+    border: 1px dashed var(--sub-text);
+    color: var(--sub-text);
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-update:hover {
+    border-color: #007aff;
+    color: #007aff;
+}
+
 .console-wrapper::-webkit-scrollbar { width: 8px; }
 .console-wrapper::-webkit-scrollbar-track { background: #111; border-radius: 12px; }
 .console-wrapper::-webkit-scrollbar-thumb { background: #4af626; border-radius: 12px; }
-
-@media (prefers-color-scheme: dark) {
-    body { background-color: #000000; color: #f2f2f7; }
-    .container { background: #1c1c1e; box-shadow: 0 10px 30px rgba(255, 255, 255, 0.05); }
-    .subtitle { color: #aeaeb2; }
-    h2 { border-bottom: 1px solid #38383a; }
-    .button:disabled { background: #38383a; color: #8e8e93; }
-    
-    .offline-guide {
-        background: #151d29;
-        border-color: #1e3a5f;
-    }
-    .offline-guide h3 { color: #0a84ff; }
-}
 </style>
 </head>
 <body>
 
 <div class="container">
+    <!-- Nút đổi Dark/Light mode -->
+    <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="Đổi giao diện">🌙</button>
+
     <h1>ReJaibreak</h1>
     <p class="subtitle">
         Công cụ hỗ trợ khởi Re-jailbreak bằng Chimera trên các thiết bị tương thích.
     </p>
+
+    <!-- Thanh trạng thái thông minh (Uptime & Kiểm tra iOS) -->
+    <div class="status-bar">
+        <span id="deviceStatus">🔍 Đang kiểm tra thiết bị...</span>
+        <span id="uptimeCounter">⏱️ Uptime: --</span>
+    </div>
 
     <p id="log"></p>
 
@@ -216,7 +289,7 @@ a:hover {
         <div id="consoleText"></div>
     </div>
 
-    <!-- KHU VỰC HƯỚNG DẪN CÀI ĐẶT APP OFFLINE MỚI -->
+    <!-- KHU VỰC HƯỚNG DẪN CÀI ĐẶT APP OFFLINE -->
     <div class="offline-guide">
         <h3>📲 Cài đặt App (Dùng Offline)</h3>
         <p>Bấm vào biểu tượng <b>Chia sẻ 📤</b> ở dưới cùng màn hình Safari.</p>
@@ -227,9 +300,9 @@ a:hover {
     <h2>✨ Tính năng</h2>
     <ul>
         <li>Hỗ trợ Re-jailbreak bằng Chimera.</li>
-        <li>Giao diện đơn giản, hiện đại và tối ưu hóa trải nghiệm.</li>
-        <li>Hỗ trợ chạy ngoại tuyến (Không cần kết nối Internet).</li>
-        <li>Tối ưu cho iPhone và iPad iOS 12.x trở xuống.</li>
+        <li>Tự động nhận diện thiết bị và trạng thái hệ thống.</li>
+        <li>Hỗ trợ chạy ngoại tuyến hoàn toàn (Không cần Internet).</li>
+        <li>Tối ưu riêng cho iPhone và iPad iOS 12.x trở xuống.</li>
     </ul>
 
     <h2>📖 Hướng dẫn sử dụng</h2>
@@ -253,10 +326,106 @@ a:hover {
         <li><b>Ngôn ngữ:</b> Tiếng Việt</li>
         <li><b>Tác giả:</b> Khanh 81GLI</li>
     </ul>
+
+    <!-- Nút Cập nhật / Xóa Cache -->
+    <div class="update-section">
+        <button class="btn-update" onclick="updateApp()">🔄 Kiểm tra cập nhật / Làm mới App</button>
+    </div>
 </div>
 
 <script>
-// KÍCH HOẠT CHẾ ĐỘ OFFLINE
+// --- TÍNH NĂNG 1: KIỂM TRA THIẾT BỊ VÀ TƯƠNG THÍCH iOS ---
+function checkDeviceCompatibility() {
+    var ua = navigator.userAgent;
+    var btn = document.getElementById("jbButton");
+    var statusEl = document.getElementById("deviceStatus");
+    
+    // Kiểm tra xem có phải thiết bị iOS hay không
+    var isIOS = /iP(hone|od|ad)/.test(ua);
+    var match = ua.match(/OS (\d+)_(\d+)_?(\d+)?/);
+    
+    if (!isIOS) {
+        statusEl.innerHTML = "⚠️ Thiết bị không phải iOS";
+        statusEl.style.color = "#ff3b30";
+        btn.disabled = true;
+        btn.innerHTML = "Không hỗ trợ PC/Android";
+        return;
+    }
+    
+    if (match) {
+        var majorVersion = parseInt(match[1], 10);
+        if (majorVersion === 12) {
+            statusEl.innerHTML = "✅ Tương thích iOS 12.x";
+            statusEl.style.color = "#34c759";
+        } else if (majorVersion < 12) {
+            statusEl.innerHTML = "⚠️ iOS cũ hơn 12.x";
+            statusEl.style.color = "#ff9500";
+        } else {
+            statusEl.innerHTML = "❌ iOS " + majorVersion + " không hỗ trợ";
+            statusEl.style.color = "#ff3b30";
+            btn.disabled = true;
+            btn.innerHTML = "iOS quá cao (Chỉ iOS 12)";
+        }
+    } else {
+        statusEl.innerHTML = "📱 Thiết bị iOS (Chưa rõ phiên bản)";
+        statusEl.style.color = "#007aff";
+    }
+}
+checkDeviceCompatibility();
+
+// --- TÍNH NĂNG 2: CÔNG TẮC ĐỔI GIAO DIỆN (DARK / LIGHT MODE) ---
+function toggleTheme() {
+    var html = document.documentElement;
+    var btn = document.getElementById("themeBtn");
+    
+    if (html.getAttribute("data-theme") === "dark") {
+        html.removeAttribute("data-theme");
+        btn.innerHTML = "🌙";
+        localStorage.setItem("theme", "light");
+    } else {
+        html.setAttribute("data-theme", "dark");
+        btn.innerHTML = "☀️";
+        localStorage.setItem("theme", "dark");
+    }
+}
+
+// Khôi phục giao diện đã lưu
+if (localStorage.getItem("theme") === "dark" || (!localStorage.getItem("theme") && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.setAttribute("data-theme", "dark");
+    document.getElementById("themeBtn").innerHTML = "☀️";
+}
+
+// --- TÍNH NĂNG 3: BỘ ĐẾM THỜI GIAN UPTIME (GIẢ LẬP TỪ LÚC MỞ WEB) ---
+var startTime = Date.now();
+setInterval(function() {
+    var seconds = Math.floor((Date.now() - startTime) / 1000);
+    var hrs = Math.floor(seconds / 3600);
+    var mins = Math.floor((seconds % 3600) / 60);
+    var secs = seconds % 60;
+    document.getElementById("uptimeCounter").innerHTML = "⏱️ Uptime: " + hrs + "h " + mins + "m " + secs + "s";
+}, 1000);
+
+// --- TÍNH NĂNG 4: NÚT LÀM MỚI / XÓA CACHE CẬP NHẬT APP ---
+function updateApp() {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(var i = 0; i < registrations.length; i++) {
+                registrations[i].unregister();
+            }
+            caches.keys().then(function(names) {
+                for (var j = 0; j < names.length; j++) {
+                    caches.delete(names[j]);
+                }
+                alert("✨ Đã xóa dữ liệu cũ! Trang web sẽ được tải lại để cập nhật phiên bản mới nhất.");
+                location.reload();
+            });
+        });
+    } else {
+        location.reload();
+    }
+}
+
+// KÍCH HOẠT CHẾ ĐỘ OFFLINE SERVICE WORKER
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
         navigator.serviceWorker.register('./sw.js').then(function(registration) {
@@ -283,7 +452,7 @@ window.onerror = function(message, source, lineno, colno, error) {
     return true;
 };
 
-// Hàm tạo Console Hacker
+// Hàm tạo Console Hacker chạy Jailbreak
 function startJB() {
     var btn = document.getElementById("jbButton");
     var consoleWrapper = document.getElementById("consoleWrapper");
