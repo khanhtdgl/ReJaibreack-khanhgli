@@ -29,7 +29,7 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 20px;
-    background-color: #f2f2f7; /* Màu nền xám nhạt chuẩn iOS */
+    background-color: #f2f2f7; 
     color: #1c1c1e;
     line-height: 1.6;
     display: flex;
@@ -48,6 +48,7 @@ body {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
+/* Tiêu đề */
 h1 {
     font-size: 38px;
     margin-top: 0;
@@ -99,34 +100,26 @@ h1 {
     transform: none;
 }
 
-/* Thanh tiến trình (Progress Bar) */
-.progress-wrapper {
+/* Khung Console Hacker */
+.console-wrapper {
     display: none;
+    background: #000000;
+    color: #4af626; /* Màu xanh lá hacker */
+    font-family: "Courier New", Courier, monospace;
+    font-size: 14px;
+    padding: 15px;
+    border-radius: 12px;
     margin-top: 20px;
+    height: 180px;
+    overflow-y: auto;
+    text-align: left;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+    border: 1px solid #333;
 }
 
-.progress-bar-container {
-    width: 100%;
-    height: 12px;
-    background: #e5e5ea;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.progress-bar-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #007aff, #34c759);
-    border-radius: 10px;
-    transition: width 0.3s ease;
-}
-
-#status {
-    color: #007aff;
-    font-weight: 600;
-    text-align: center;
-    margin-top: 15px;
-    font-size: 16px;
+.console-line {
+    margin: 3px 0;
+    word-wrap: break-word;
 }
 
 #log {
@@ -161,6 +154,19 @@ a:hover {
     text-decoration: underline;
 }
 
+/* Tùy chỉnh thanh cuộn cho Console */
+.console-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+.console-wrapper::-webkit-scrollbar-track {
+    background: #111; 
+    border-radius: 12px;
+}
+.console-wrapper::-webkit-scrollbar-thumb {
+    background: #4af626; 
+    border-radius: 12px;
+}
+
 /* Hỗ trợ Dark Mode */
 @media (prefers-color-scheme: dark) {
     body {
@@ -181,9 +187,6 @@ a:hover {
         background: #38383a;
         color: #8e8e93;
     }
-    .progress-bar-container {
-        background: #38383a;
-    }
 }
 </style>
 </head>
@@ -203,12 +206,9 @@ a:hover {
         </button>
     </div>
 
-    <!-- Khung chứa thanh tiến trình -->
-    <div id="progressWrapper" class="progress-wrapper">
-        <div class="progress-bar-container">
-            <div id="progressBarFill" class="progress-bar-fill"></div>
-        </div>
-        <p id="status"></p>
+    <!-- Màn hình Console Terminal ảo -->
+    <div id="consoleWrapper" class="console-wrapper">
+        <div id="consoleText"></div>
     </div>
 
     <h2>✨ Tính năng</h2>
@@ -264,45 +264,76 @@ window.onerror = function(message, source, lineno, colno, error) {
 
 function startJB() {
     var btn = document.getElementById("jbButton");
-    var statusEl = document.getElementById("status");
-    var progressWrapper = document.getElementById("progressWrapper");
-    var progressBarFill = document.getElementById("progressBarFill");
+    var consoleWrapper = document.getElementById("consoleWrapper");
+    var consoleText = document.getElementById("consoleText");
     
-    // Vô hiệu hóa nút và hiện thanh tiến trình
+    // Vô hiệu hóa nút & Mở khung console
     btn.disabled = true;
-    btn.innerHTML = "Đang xử lý...";
-    progressWrapper.style.display = "block";
+    btn.innerHTML = "Đang chạy khai thác...";
+    consoleWrapper.style.display = "block";
+    consoleText.innerHTML = "";
     
-    var progress = 0;
+    // Mảng chứa các câu lệnh jailbreak giả lập để tăng độ "ngầu"
+    var hackLogs = [
+        "[*] Khởi tạo tiến trình Re-Jailbreak...",
+        "[+] Nhận diện cấu trúc hệ thống: OK",
+        "[*] Bypassing KASLR (Kernel Address Space Layout Randomization)...",
+        "[+] Tìm kiếm lỗ hổng kernel...",
+        "[*] Đang thực thi mã khai thác...",
+        "[+] Thành công! Lấy được tfp0 (Kernel Task Port).",
+        "[*] Đang khởi tạo fake kernel credentials...",
+        "[+] Bypassing KTRR và AMFI...",
+        "[*] Remounting RootFS thành quyền Read/Write...",
+        "[+] Patching các phân vùng hệ thống...",
+        "[*] Đang xây dựng JOP chain...",
+        "[+] Sẵn sàng thực thi payload."
+    ];
     
-    // Chạy thanh tiến trình mượt mà
-    var interval = setInterval(function() {
-        progress += Math.floor(Math.random() * 12) + 4; 
-        
-        if (progress >= 100) {
-            progress = 100;
-            progressBarFill.style.width = progress + "%";
-            clearInterval(interval);
+    var index = 0;
+    
+    // Dùng setInterval để in từng dòng ra màn hình Console giống hacker
+    var logInterval = setInterval(function() {
+        if (index < hackLogs.length) {
+            var line = document.createElement("div");
+            line.className = "console-line";
+            line.innerHTML = hackLogs[index];
+            consoleText.appendChild(line);
             
-            btn.innerHTML = "Hoàn tất 100%";
-            statusEl.innerHTML = "⏳ Đang thực thi mã Jailbreak, vui lòng đợi...";
-            statusEl.style.color = "#34c759"; // Đổi màu chữ sang xanh lá
+            // Tự động cuộn màn hình Console xuống dòng mới nhất
+            consoleWrapper.scrollTop = consoleWrapper.scrollHeight;
+            index++;
+        } else {
+            clearInterval(logInterval);
             
+            // Dòng cuối cùng cảnh báo chuẩn bị chạy mã thật
+            var finalLine = document.createElement("div");
+            finalLine.className = "console-line";
+            finalLine.style.color = "#ffffff";
+            finalLine.style.fontWeight = "bold";
+            finalLine.innerHTML = "🚀 [!] Kích hoạt pwn(). Đang chèn mã...";
+            consoleText.appendChild(finalLine);
+            consoleWrapper.scrollTop = consoleWrapper.scrollHeight;
+            
+            btn.innerHTML = "Đang thực thi mã...";
+            
+            // Delay một chút trước khi gọi hàm pwn() thật để UI không bị đơ gắt
             setTimeout(function() {
                 try {
-                    pwn();
+                    pwn(); // Gọi hàm Jailbreak gốc
                 } catch (e) {
-                    statusEl.innerHTML = "❌ Jailbreak thất bại. Vui lòng thử lại.";
-                    statusEl.style.color = "#ff3b30";
+                    var errLine = document.createElement("div");
+                    errLine.className = "console-line";
+                    errLine.style.color = "#ff3b30";
+                    errLine.innerHTML = "❌ [LỖI] Khai thác thất bại. Hãy thử lại.";
+                    consoleText.appendChild(errLine);
+                    consoleWrapper.scrollTop = consoleWrapper.scrollHeight;
+                    
                     btn.innerHTML = "Thử lại";
                     btn.disabled = false;
                 }
-            }, 500);
-        } else {
-            progressBarFill.style.width = progress + "%";
-            statusEl.innerHTML = "⏳ Đang chuẩn bị môi trường khai thác... " + progress + "%";
+            }, 800);
         }
-    }, 200);
+    }, 250); // Mỗi 250ms sẽ hiện 1 dòng log
 }
 </script>
 
