@@ -167,75 +167,89 @@ a:hover {
     border-radius: 12px;
 }
 
-/* KHU VỰC TẢI MÃ NGUỒN */
+/* KHU VỰC TẢI MÃ NGUỒN - THIẾT KẾ MỚI CỰC ĐẸP */
 .dev-box {
-    background: #fcfcfd;
-    border: 2px dashed #d1d1d6;
-    padding: 25px 20px;
-    border-radius: 16px;
+    background: #f8f9fa;
+    border: 1px solid #e5e5ea;
+    padding: 30px 20px;
+    border-radius: 20px;
     margin-top: 40px;
     text-align: center;
-    transition: all 0.3s ease;
-}
-.dev-box:hover {
-    border-color: #007aff;
-    background: #f2f8ff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
 }
 .dev-box h2 {
     margin-top: 0;
     border-bottom: none;
     justify-content: center;
-    font-size: 20px;
+    font-size: 22px;
 }
 .dev-box p {
-    font-size: 14px;
+    font-size: 15px;
     color: #8e8e93;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 .pwd-container {
     display: flex;
-    justify-content: center;
-    gap: 12px;
-    max-width: 350px;
+    flex-direction: column; /* Xếp dọc để nhìn to và rõ hơn */
+    gap: 15px;
+    max-width: 280px;
     margin: 0 auto;
 }
 .input-pwd {
-    flex: 1;
-    padding: 12px 15px;
+    width: 100%;
+    padding: 16px;
     border: 2px solid #e5e5ea;
-    border-radius: 12px;
-    font-size: 16px;
+    border-radius: 16px;
+    font-size: 24px;
     text-align: center;
-    letter-spacing: 2px;
+    letter-spacing: 12px; /* Giãn chữ cực rộng giống Passcode iOS */
+    font-weight: bold;
     outline: none;
-    transition: all 0.3s ease;
-    background: #fff;
+    background: #ffffff;
+    box-sizing: border-box;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    color: #1c1c1e;
+}
+.input-pwd::placeholder {
+    letter-spacing: 2px;
+    font-size: 16px;
+    font-weight: normal;
+    color: #c7c7cc;
 }
 .input-pwd:focus {
     border-color: #007aff;
-    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+    box-shadow: 0 8px 20px rgba(0, 122, 255, 0.15);
+    transform: translateY(-2px);
 }
 .btn-download {
-    background: linear-gradient(45deg, #34c759, #30b551);
+    width: 100%;
+    background: linear-gradient(135deg, #34c759, #28a745);
     color: #fff;
     border: none;
-    padding: 0 20px;
-    border-radius: 12px;
-    font-size: 15px;
-    font-weight: 600;
+    padding: 16px;
+    border-radius: 16px;
+    font-size: 18px;
+    font-weight: 700;
     cursor: pointer;
+    box-sizing: border-box;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(52, 199, 89, 0.3);
+    box-shadow: 0 6px 15px rgba(52, 199, 89, 0.3);
 }
 .btn-download:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(52, 199, 89, 0.4);
+    box-shadow: 0 8px 20px rgba(52, 199, 89, 0.4);
+}
+.btn-download:active {
+    transform: translateY(1px);
+    box-shadow: 0 4px 10px rgba(52, 199, 89, 0.3);
 }
 .download-status {
     margin-top: 15px;
     font-weight: 600;
-    font-size: 14px;
-    min-height: 20px;
+    font-size: 15px;
+    min-height: 22px;
 }
 
 /* Hỗ trợ Dark Mode */
@@ -261,16 +275,13 @@ a:hover {
     
     .dev-box {
         background: #151516;
-        border-color: #38383a;
-    }
-    .dev-box:hover {
-        border-color: #0a84ff;
-        background: #1c1c1e;
+        border-color: #2c2c2e;
+        box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.02);
     }
     .input-pwd {
         background: #2c2c2e;
         border-color: #38383a;
-        color: #fff;
+        color: #ffffff;
     }
     .input-pwd:focus {
         border-color: #0a84ff;
@@ -332,13 +343,17 @@ a:hover {
         <li><b>Tác giả:</b> Khanh 81GLI</li>
     </ul>
 
-    <!-- HỘP TẢI MÃ NGUỒN (ZIP) -->
+    <!-- HỘP TẢI MÃ NGUỒN GIAO DIỆN MỚI -->
     <div class="dev-box">
-        <h2>🔒 Khu Vực Dành Cho Dev</h2>
-        <p>Vui lòng nhập mật khẩu để tải toàn bộ mã nguồn (File ZIP).</p>
+        <h2>🔒 Khu Vực Mã Nguồn</h2>
+        <p>Nhập mã PIN (6 số) để tải tệp hệ thống.</p>
         <div class="pwd-container">
-            <input type="password" id="sourcePwd" class="input-pwd" placeholder="••••••" maxlength="15">
-            <button class="btn-download" onclick="downloadSource()">Tải Xuống</button>
+            <!-- 
+              inputmode="numeric" và pattern="[0-9]*" giúp bắt buộc gọi Bàn Phím Số trên iOS/Android 
+              maxlength="6" giới hạn chỉ được nhập đúng 6 số
+            -->
+            <input type="password" id="sourcePwd" class="input-pwd" placeholder="Nhập PIN" inputmode="numeric" pattern="[0-9]*" maxlength="6">
+            <button class="btn-download" onclick="downloadSource()">TẢI XUỐNG ZIP</button>
         </div>
         <div id="downloadStatus" class="download-status"></div>
     </div>
@@ -437,18 +452,14 @@ function downloadSource() {
 
     if (pwdInput === "") {
         statusText.style.color = "#ff3b30";
-        statusText.innerHTML = "⚠️ Bạn chưa nhập mật khẩu!";
+        statusText.innerHTML = "⚠️ Vui lòng nhập mã PIN!";
         return;
     }
 
     if (pwdInput === correctPwd) {
         statusText.style.color = "#34c759"; 
-        statusText.innerHTML = "✅ Mật khẩu chính xác! Đang tải file ZIP...";
+        statusText.innerHTML = "✅ PIN chính xác! Đang tải tệp ZIP...";
         
-        // GIẢI THÍCH:
-        // Nếu bạn lấy được link ZIP trực tiếp từ GitHub, hãy dán đè nó vào chữ "ReJailbreak_Source.zip" bên dưới
-        // Ví dụ: var zipUrl = "https://github.com/khanh81/repo/archive/refs/heads/main.zip";
-        // Còn nếu bạn đã tự tạo file ZIP và tải lên ngang hàng với index.html, thì cứ giữ nguyên.
         var zipUrl = "ReJailbreak_Source.zip"; 
         
         var a = document.createElement("a");
@@ -458,7 +469,6 @@ function downloadSource() {
         a.click();
         document.body.removeChild(a);
         
-        // Trả lại trạng thái cũ sau 3 giây
         setTimeout(function() {
             document.getElementById("sourcePwd").value = "";
             statusText.innerHTML = "";
@@ -466,7 +476,7 @@ function downloadSource() {
 
     } else {
         statusText.style.color = "#ff3b30"; 
-        statusText.innerHTML = "❌ Mật khẩu không chính xác!";
+        statusText.innerHTML = "❌ Mã PIN không chính xác!";
         document.getElementById("sourcePwd").value = "";
     }
 }
