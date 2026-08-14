@@ -167,37 +167,75 @@ a:hover {
     border-radius: 12px;
 }
 
-/* Khu vực tải mã nguồn */
+/* KHU VỰC TẢI MÃ NGUỒN - ĐÃ LÀM ĐẸP */
+.dev-box {
+    background: #fcfcfd;
+    border: 2px dashed #d1d1d6;
+    padding: 25px 20px;
+    border-radius: 16px;
+    margin-top: 40px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+.dev-box:hover {
+    border-color: #007aff;
+    background: #f2f8ff;
+}
+.dev-box h2 {
+    margin-top: 0;
+    border-bottom: none;
+    justify-content: center;
+    font-size: 20px;
+}
+.dev-box p {
+    font-size: 14px;
+    color: #8e8e93;
+    margin-bottom: 20px;
+}
 .pwd-container {
     display: flex;
-    gap: 10px;
-    margin-top: 15px;
+    justify-content: center;
+    gap: 12px;
+    max-width: 350px;
+    margin: 0 auto;
 }
 .input-pwd {
     flex: 1;
     padding: 12px 15px;
-    border: 1px solid #c7c7cc;
+    border: 2px solid #e5e5ea;
     border-radius: 12px;
     font-size: 16px;
+    text-align: center;
+    letter-spacing: 2px;
     outline: none;
-    transition: border-color 0.3s;
+    transition: all 0.3s ease;
+    background: #fff;
 }
 .input-pwd:focus {
     border-color: #007aff;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
 }
 .btn-download {
-    background: #34c759;
+    background: linear-gradient(45deg, #34c759, #30b551);
     color: #fff;
     border: none;
-    padding: 12px 20px;
+    padding: 0 20px;
     border-radius: 12px;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(52, 199, 89, 0.3);
 }
 .btn-download:hover {
-    background: #28a745;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(52, 199, 89, 0.4);
+}
+.download-status {
+    margin-top: 15px;
+    font-weight: 600;
+    font-size: 14px;
+    min-height: 20px;
 }
 
 /* Hỗ trợ Dark Mode */
@@ -219,6 +257,16 @@ a:hover {
     .button:disabled {
         background: #38383a;
         color: #8e8e93;
+    }
+    
+    /* Dark mode cho Dev box */
+    .dev-box {
+        background: #151516;
+        border-color: #38383a;
+    }
+    .dev-box:hover {
+        border-color: #0a84ff;
+        background: #1c1c1e;
     }
     .input-pwd {
         background: #2c2c2e;
@@ -285,11 +333,15 @@ a:hover {
         <li><b>Tác giả:</b> Khanh 81GLI</li>
     </ul>
 
-    <h2>🔒 Tải mã nguồn (Dành cho Dev)</h2>
-    <p style="font-size: 14px; color: #8e8e93; margin-bottom: 5px;">Yêu cầu mật khẩu để tải file nguồn gốc.</p>
-    <div class="pwd-container">
-        <input type="password" id="sourcePwd" class="input-pwd" placeholder="Nhập mật khẩu bí mật...">
-        <button class="btn-download" onclick="downloadSource()">Tải Web</button>
+    <!-- HỘP TẢI MÃ NGUỒN ĐÃ ĐƯỢC LÀM ĐẸP -->
+    <div class="dev-box">
+        <h2>🔒 Khu Vực Dành Cho Dev</h2>
+        <p>Vui lòng nhập mật khẩu để trích xuất file mã nguồn gốc.</p>
+        <div class="pwd-container">
+            <input type="password" id="sourcePwd" class="input-pwd" placeholder="••••••" maxlength="15">
+            <button class="btn-download" onclick="downloadSource()">Tải Xuống</button>
+        </div>
+        <div id="downloadStatus" class="download-status"></div>
     </div>
 </div>
 
@@ -375,14 +427,26 @@ function startJB() {
     }, 250);
 }
 
-// Hàm xử lý Tải mã nguồn có mật khẩu
+// Hàm xử lý Tải mã nguồn (đã xoá alert, dùng text mượt mà hơn)
 function downloadSource() {
     var pwdInput = document.getElementById("sourcePwd").value;
+    var statusText = document.getElementById("downloadStatus");
     
-    // ĐÃ CẬP NHẬT MẬT KHẨU
     var correctPwd = "944151"; 
 
+    // Reset status
+    statusText.innerHTML = "";
+
+    if (pwdInput === "") {
+        statusText.style.color = "#ff3b30";
+        statusText.innerHTML = "⚠️ Bạn chưa nhập mật khẩu!";
+        return;
+    }
+
     if (pwdInput === correctPwd) {
+        statusText.style.color = "#34c759"; // Xanh lá
+        statusText.innerHTML = "✅ Mật khẩu chính xác! Đang tải xuống...";
+        
         fetch(window.location.href)
             .then(function(response) { return response.text(); })
             .then(function(html) {
@@ -395,14 +459,21 @@ function downloadSource() {
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
-                alert("✅ Mật khẩu chính xác! Đang tải mã nguồn về thiết bị.");
-                document.getElementById("sourcePwd").value = ""; // Xoá trắng ô nhập
+                
+                // Trả lại trạng thái cũ sau 3 giây
+                setTimeout(function() {
+                    document.getElementById("sourcePwd").value = "";
+                    statusText.innerHTML = "";
+                }, 3000);
             })
             .catch(function(err) {
-                alert("❌ Lỗi: Không thể tải mã nguồn khi chạy offline trên máy tính. Chức năng này hoạt động tốt nhất khi web đã được đưa lên host/server.");
+                statusText.style.color = "#ff3b30";
+                statusText.innerHTML = "❌ Lỗi: Tính năng tải chỉ hoạt động khi đưa web lên Server/Host.";
             });
     } else {
-        alert("❌ Mật khẩu không chính xác! Vui lòng thử lại.");
+        statusText.style.color = "#ff3b30"; // Đỏ
+        statusText.innerHTML = "❌ Mật khẩu không chính xác!";
+        document.getElementById("sourcePwd").value = "";
     }
 }
 </script>
