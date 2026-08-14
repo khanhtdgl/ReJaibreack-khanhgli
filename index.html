@@ -119,16 +119,15 @@ h1 {
     font-size: 17px;
 }
 
-/* Trạng thái Uptime & Thiết bị */
+/* Thanh trạng thái kiểm tra thiết bị */
 .status-bar {
-    display: flex;
-    justify-content: space-between;
     background: var(--border-color);
     padding: 10px 15px;
     border-radius: 12px;
     font-size: 13px;
     margin-bottom: 20px;
     color: var(--sub-text);
+    text-align: center;
 }
 
 .button-container {
@@ -295,10 +294,9 @@ a:hover {
         Công cụ hỗ trợ khởi Re-jailbreak bằng Chimera trên các thiết bị tương thích.
     </p>
 
-    <!-- Thanh trạng thái thông minh (Uptime & Kiểm tra iOS) -->
+    <!-- Thanh trạng thái kiểm tra iOS -->
     <div class="status-bar">
         <span id="deviceStatus">🔍 Đang kiểm tra thiết bị...</span>
-        <span id="uptimeCounter">⏱️ Uptime: --</span>
     </div>
 
     <p id="log"></p>
@@ -424,17 +422,7 @@ if (localStorage.getItem("theme") === "dark" || (!localStorage.getItem("theme") 
     document.getElementById("themeBtn").innerHTML = "☀️";
 }
 
-// --- BỘ ĐẾM THỜI GIAN UPTIME ---
-var startTime = Date.now();
-setInterval(function() {
-    var seconds = Math.floor((Date.now() - startTime) / 1000);
-    var hrs = Math.floor(seconds / 3600);
-    var mins = Math.floor((seconds % 3600) / 60);
-    var secs = seconds % 60;
-    document.getElementById("uptimeCounter").innerHTML = "⏱️ Uptime: " + hrs + "h " + mins + "m " + secs + "s";
-}, 1000);
-
-// --- KIỂM TRA PHIÊN BẢN TỰ ĐỘNG TỪ version.json (KHÔNG POPUP PHIỀN PHỨC) ---
+// --- KIỂM TRA PHIÊN BẢN TỰ ĐỘNG TỪ version.json ---
 async function checkAppVersion(isManual = false) {
     try {
         let response = await fetch('./version.json?t=' + Date.now());
@@ -449,7 +437,6 @@ async function checkAppVersion(isManual = false) {
             localStorage.setItem('app_version', remoteVersion);
         } else if (localVersion !== remoteVersion) {
             localStorage.setItem('app_version', remoteVersion);
-            // Tự động cập nhật ngầm luôn thay vì hỏi popup
             updateApp();
         } else if (isManual) {
             updateApp();
