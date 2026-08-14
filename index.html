@@ -104,7 +104,7 @@ h1 {
 .console-wrapper {
     display: none;
     background: #000000;
-    color: #4af626; /* Màu xanh lá hacker */
+    color: #4af626;
     font-family: "Courier New", Courier, monospace;
     font-size: 14px;
     padding: 15px;
@@ -167,6 +167,39 @@ a:hover {
     border-radius: 12px;
 }
 
+/* Khu vực tải mã nguồn */
+.pwd-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+.input-pwd {
+    flex: 1;
+    padding: 12px 15px;
+    border: 1px solid #c7c7cc;
+    border-radius: 12px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+.input-pwd:focus {
+    border-color: #007aff;
+}
+.btn-download {
+    background: #34c759;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.btn-download:hover {
+    background: #28a745;
+}
+
 /* Hỗ trợ Dark Mode */
 @media (prefers-color-scheme: dark) {
     body {
@@ -186,6 +219,14 @@ a:hover {
     .button:disabled {
         background: #38383a;
         color: #8e8e93;
+    }
+    .input-pwd {
+        background: #2c2c2e;
+        border-color: #38383a;
+        color: #fff;
+    }
+    .input-pwd:focus {
+        border-color: #0a84ff;
     }
 }
 </style>
@@ -243,6 +284,13 @@ a:hover {
         <li><b>Ngôn ngữ:</b> Tiếng Việt</li>
         <li><b>Tác giả:</b> Khanh 81GLI</li>
     </ul>
+
+    <h2>🔒 Tải mã nguồn (Dành cho Dev)</h2>
+    <p style="font-size: 14px; color: #8e8e93; margin-bottom: 5px;">Yêu cầu mật khẩu để tải file nguồn gốc.</p>
+    <div class="pwd-container">
+        <input type="password" id="sourcePwd" class="input-pwd" placeholder="Nhập mật khẩu bí mật...">
+        <button class="btn-download" onclick="downloadSource()">Tải Web</button>
+    </div>
 </div>
 
 <script>
@@ -262,18 +310,17 @@ window.onerror = function(message, source, lineno, colno, error) {
     return true;
 };
 
+// Hàm tạo Console Hacker
 function startJB() {
     var btn = document.getElementById("jbButton");
     var consoleWrapper = document.getElementById("consoleWrapper");
     var consoleText = document.getElementById("consoleText");
     
-    // Vô hiệu hóa nút & Mở khung console
     btn.disabled = true;
     btn.innerHTML = "Đang chạy khai thác...";
     consoleWrapper.style.display = "block";
     consoleText.innerHTML = "";
     
-    // Mảng chứa các câu lệnh jailbreak giả lập để tăng độ "ngầu"
     var hackLogs = [
         "[*] Khởi tạo tiến trình Re-Jailbreak...",
         "[+] Nhận diện cấu trúc hệ thống: OK",
@@ -291,21 +338,16 @@ function startJB() {
     
     var index = 0;
     
-    // Dùng setInterval để in từng dòng ra màn hình Console giống hacker
     var logInterval = setInterval(function() {
         if (index < hackLogs.length) {
             var line = document.createElement("div");
             line.className = "console-line";
             line.innerHTML = hackLogs[index];
             consoleText.appendChild(line);
-            
-            // Tự động cuộn màn hình Console xuống dòng mới nhất
             consoleWrapper.scrollTop = consoleWrapper.scrollHeight;
             index++;
         } else {
             clearInterval(logInterval);
-            
-            // Dòng cuối cùng cảnh báo chuẩn bị chạy mã thật
             var finalLine = document.createElement("div");
             finalLine.className = "console-line";
             finalLine.style.color = "#ffffff";
@@ -313,13 +355,11 @@ function startJB() {
             finalLine.innerHTML = "🚀 [!] Kích hoạt pwn(). Đang chèn mã...";
             consoleText.appendChild(finalLine);
             consoleWrapper.scrollTop = consoleWrapper.scrollHeight;
-            
             btn.innerHTML = "Đang thực thi mã...";
             
-            // Delay một chút trước khi gọi hàm pwn() thật để UI không bị đơ gắt
             setTimeout(function() {
                 try {
-                    pwn(); // Gọi hàm Jailbreak gốc
+                    pwn();
                 } catch (e) {
                     var errLine = document.createElement("div");
                     errLine.className = "console-line";
@@ -327,13 +367,43 @@ function startJB() {
                     errLine.innerHTML = "❌ [LỖI] Khai thác thất bại. Hãy thử lại.";
                     consoleText.appendChild(errLine);
                     consoleWrapper.scrollTop = consoleWrapper.scrollHeight;
-                    
                     btn.innerHTML = "Thử lại";
                     btn.disabled = false;
                 }
             }, 800);
         }
-    }, 250); // Mỗi 250ms sẽ hiện 1 dòng log
+    }, 250);
+}
+
+// Hàm xử lý Tải mã nguồn có mật khẩu
+function downloadSource() {
+    var pwdInput = document.getElementById("sourcePwd").value;
+    
+    // ĐÃ CẬP NHẬT MẬT KHẨU
+    var correctPwd = "944151"; 
+
+    if (pwdInput === correctPwd) {
+        fetch(window.location.href)
+            .then(function(response) { return response.text(); })
+            .then(function(html) {
+                var blob = new Blob([html], { type: "text/html" });
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement("a");
+                a.href = url;
+                a.download = "ReJailbreak_Source.html";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                alert("✅ Mật khẩu chính xác! Đang tải mã nguồn về thiết bị.");
+                document.getElementById("sourcePwd").value = ""; // Xoá trắng ô nhập
+            })
+            .catch(function(err) {
+                alert("❌ Lỗi: Không thể tải mã nguồn khi chạy offline trên máy tính. Chức năng này hoạt động tốt nhất khi web đã được đưa lên host/server.");
+            });
+    } else {
+        alert("❌ Mật khẩu không chính xác! Vui lòng thử lại.");
+    }
 }
 </script>
 
