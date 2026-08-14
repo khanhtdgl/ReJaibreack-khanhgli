@@ -24,164 +24,287 @@ try {
 }
 </script>
 <style>
-body{
-    font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-    max-width:850px;
-    margin:auto;
-    padding:25px;
-    background:#fff;
-    color:#111;
-    line-height:1.7;
+/* Reset & Base Styles */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f2f2f7; /* Màu nền xám nhạt chuẩn iOS */
+    color: #1c1c1e;
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
-h1{
-    font-size:42px;
-    margin-bottom:10px;
+
+/* Container dạng thẻ (Card) */
+.container {
+    background: #ffffff;
+    max-width: 750px;
+    width: 100%;
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
-.button{
-    background:#e9e9ed;
-    color:#007aff;
-    padding:12px 28px;
-    border:none;
-    border-radius:30px;
-    font-size:22px;
-    cursor:pointer;
-    margin:20px 0;
+
+h1 {
+    font-size: 38px;
+    margin-top: 0;
+    margin-bottom: 10px;
+    text-align: center;
+    background: -webkit-linear-gradient(45deg, #007aff, #34c759);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    text-align: center;
+    color: #8e8e93;
+    margin-bottom: 30px;
+    font-size: 17px;
+}
+
+/* Nút bấm hiện đại */
+.button-container {
+    text-align: center;
+    margin: 30px 0 10px 0;
+}
+
+.button {
+    background: #007aff;
+    color: #ffffff;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 30px;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
     transition: all 0.3s ease;
-    min-width: 180px;
+    min-width: 200px;
+    box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
 }
-.button:hover{
-    background:#dcdce0;
+
+.button:hover {
+    background: #005bb5;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 122, 255, 0.4);
 }
+
 .button:disabled {
-    background: #cccccc;
-    color: #666666;
+    background: #e5e5ea;
+    color: #8e8e93;
     cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
 }
-#log{
-    color:red;
-    margin-bottom:20px;
+
+/* Thanh tiến trình (Progress Bar) */
+.progress-wrapper {
+    display: none;
+    margin-top: 20px;
 }
-#status{
-    color:#007aff;
-    font-weight:bold;
-    margin-top:10px;
+
+.progress-bar-container {
+    width: 100%;
+    height: 12px;
+    background: #e5e5ea;
+    border-radius: 10px;
+    overflow: hidden;
 }
-h2{
-    margin-top:35px;
+
+.progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #007aff, #34c759);
+    border-radius: 10px;
+    transition: width 0.3s ease;
 }
-ol li,
-ul li{
-    margin-bottom:10px;
+
+#status {
+    color: #007aff;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 15px;
+    font-size: 16px;
+}
+
+#log {
+    color: #ff3b30;
+    text-align: center;
+}
+
+/* Các tiêu đề phụ */
+h2 {
+    font-size: 22px;
+    margin-top: 35px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e5e5ea;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+ul, ol {
+    padding-left: 20px;
+}
+
+li {
+    margin-bottom: 12px;
+}
+
+a {
+    color: #007aff;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+/* Hỗ trợ Dark Mode */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #000000;
+        color: #f2f2f7;
+    }
+    .container {
+        background: #1c1c1e;
+        box-shadow: 0 10px 30px rgba(255, 255, 255, 0.05);
+    }
+    .subtitle {
+        color: #aeaeb2;
+    }
+    h2 {
+        border-bottom: 1px solid #38383a;
+    }
+    .button:disabled {
+        background: #38383a;
+        color: #8e8e93;
+    }
+    .progress-bar-container {
+        background: #38383a;
+    }
 }
 </style>
 </head>
 <body>
 
-<p id="log"></p>
+<div class="container">
+    <h1>ReJaibreak</h1>
+    <p class="subtitle">
+        Công cụ hỗ trợ khởi Re-jailbreak bằng Chimera trên các thiết bị tương thích.
+    </p>
+
+    <p id="log"></p>
+
+    <div class="button-container">
+        <button id="jbButton" class="button" onclick="startJB();">
+            Khởi chạy ngay
+        </button>
+    </div>
+
+    <!-- Khung chứa thanh tiến trình -->
+    <div id="progressWrapper" class="progress-wrapper">
+        <div class="progress-bar-container">
+            <div id="progressBarFill" class="progress-bar-fill"></div>
+        </div>
+        <p id="status"></p>
+    </div>
+
+    <h2>✨ Tính năng</h2>
+    <ul>
+        <li>Hỗ trợ Re-jailbreak bằng Chimera.</li>
+        <li>Giao diện đơn giản, hiện đại và tối ưu hóa trải nghiệm.</li>
+        <li>Khởi chạy nhanh chỉ với một nút bấm.</li>
+        <li>Tối ưu cho iPhone và iPad iOS 12.x trở xuống.</li>
+    </ul>
+
+    <h2>📖 Hướng dẫn sử dụng</h2>
+    <ol>
+        <li>Nhấn <b>Khởi chạy ngay</b> ở phía trên.</li>
+        <li>Khi xuất hiện thông báo <b>"Building JOP chain, executing stages payload!"</b>, nhấn <b>Đóng</b>.</li>
+        <li>Chờ quá trình re-jailbreak hoàn tất.</li>
+        <li>Khi xuất hiện thông báo <b>"re-jailbreak done"</b>, nhấn <b>"userspace reboot"</b>.</li>
+        <li>Thiết bị sẽ khởi động lại userspace.</li>
+        <li>Hoàn tất re-Jailbreak.</li>
+    </ol>
+
+    <h2>🔧 Hướng dẫn fix YouTube cũ</h2>
+    <ol>
+        <li>Mở ứng dụng <b>Sileo</b> trên thiết bị của bạn.</li>
+        <li>Thêm link nguồn sau vào Sileo: <a href="https://poomsmart.github.io" target="_blank"><b>https://poomsmart.github.io</b></a></li>
+        <li>Tìm kiếm và tải về tweak có tên là <b>Legacy</b>.</li>
+        <li>Hoàn tất cài đặt để sử dụng YouTube bình thường.</li>
+    </ol>
+
+    <h2>ℹ️ Thông tin</h2>
+    <ul>
+        <li><b>Jailbreak hỗ trợ:</b> Chimera</li>
+        <li><b>Ngôn ngữ:</b> Tiếng Việt</li>
+        <li><b>Tác giả:</b> Khanh 81GLI</li>
+    </ul>
+</div>
+
 <script>
 window.onerror = function(message, source, lineno, colno, error) {
     try {
         let ErrorName = error.name;
     } catch (ee) {
-        document.getElementById("log").innerHTML += "<h3>Trình duyệt không được hỗ trợ!</h3>";
+        document.getElementById("log").innerHTML = "<h3>Trình duyệt không được hỗ trợ!</h3>";
         return true;
     }
-    if ('InvalidStateError' == error.name) {
-        location.reload();
-    } else if ('TypeError' == error.name) {
+    if ('InvalidStateError' == error.name || 'TypeError' == error.name) {
         location.reload();
     } else {
-        document.getElementById("log").innerHTML += "<h3>"+message+" @ "+lineno+"</h3>";
-        try {
-            ws.send(""+message+" @ "+lineno);
-        } catch (error) {
-            void(0);
-        }
+        document.getElementById("log").innerHTML = "<h3>"+message+" @ "+lineno+"</h3>";
+        try { ws.send(""+message+" @ "+lineno); } catch (error) { void(0); }
     }
     return true;
 };
 
-// Hàm chạy tiến trình %
 function startJB() {
     var btn = document.getElementById("jbButton");
     var statusEl = document.getElementById("status");
+    var progressWrapper = document.getElementById("progressWrapper");
+    var progressBarFill = document.getElementById("progressBarFill");
     
-    // Vô hiệu hóa nút để tránh người dùng bấm 2 lần
+    // Vô hiệu hóa nút và hiện thanh tiến trình
     btn.disabled = true;
+    btn.innerHTML = "Đang xử lý...";
+    progressWrapper.style.display = "block";
     
     var progress = 0;
     
-    // Cập nhật % mỗi 150ms
+    // Chạy thanh tiến trình mượt mà
     var interval = setInterval(function() {
-        // Tăng % ngẫu nhiên từ 5 đến 15 để tạo cảm giác chân thực
-        progress += Math.floor(Math.random() * 11) + 5; 
+        progress += Math.floor(Math.random() * 12) + 4; 
         
         if (progress >= 100) {
             progress = 100;
+            progressBarFill.style.width = progress + "%";
             clearInterval(interval);
             
-            btn.innerHTML = "Đang thực thi 100%";
-            statusEl.innerHTML = "⏳ Đang chạy mã Jailbreak, vui lòng đợi...";
+            btn.innerHTML = "Hoàn tất 100%";
+            statusEl.innerHTML = "⏳ Đang thực thi mã Jailbreak, vui lòng đợi...";
+            statusEl.style.color = "#34c759"; // Đổi màu chữ sang xanh lá
             
-            // Delay 300ms để trình duyệt kịp hiển thị 100% trước khi hàm pwn() làm đơ UI
             setTimeout(function() {
                 try {
                     pwn();
                 } catch (e) {
-                    statusEl.innerHTML = "❌ Jailbreak thất bại.";
+                    statusEl.innerHTML = "❌ Jailbreak thất bại. Vui lòng thử lại.";
+                    statusEl.style.color = "#ff3b30";
                     btn.innerHTML = "Thử lại";
                     btn.disabled = false;
                 }
-            }, 300);
+            }, 500);
         } else {
-            btn.innerHTML = "Đang xử lý " + progress + "%";
-            statusEl.innerHTML = "⏳ Đang chuẩn bị môi trường... " + progress + "%";
+            progressBarFill.style.width = progress + "%";
+            statusEl.innerHTML = "⏳ Đang chuẩn bị môi trường khai thác... " + progress + "%";
         }
-    }, 150);
+    }, 200);
 }
 </script>
-
-<h1>ReJaibreak</h1>
-<p>
-Công cụ hỗ trợ khởi Re-jailbreak bằng Chimera trên các thiết bị tương thích.
-</p>
-<button id="jbButton" class="button" onclick="startJB();">
-Khởi chạy
-</button>
-<p id="status"></p>
-
-<h2>Tính năng</h2>
-<ul>
-<li>Hỗ trợ Re-jailbreak bằng Chimera.</li>
-<li>Giao diện đơn giản, dễ sử dụng.</li>
-<li>Khởi chạy nhanh chỉ với một nút bấm.</li>
-<li>Tối ưu cho iPhone và iPad IOS 12x Trở lại.</li>
-</ul>
-
-<h2>Hướng dẫn sử dụng</h2>
-<ol>
-<li>Nhấn <b>Khởi chạy</b>.</li>
-<li>Khi xuất hiện thông báo <b>"Building JOP chain, executing stages payload!"</b>, nhấn <b>Đóng</b>.</li>
-<li>Chờ quá trình re-jailbreak hoàn tất.</li>
-<li>Khi xuất hiện thông báo <b>"re-jailbreak done"</b>, nhấn <b>"userspace reboot"</b>.</li>
-<li>Thiết bị sẽ khởi động lại userspace.</li>
-<li>Hoàn tất re-Jaibreack.</li>
-</ol>
-
-<h2>Hướng dẫn fix youtube cũ</h2>
-<ol>
-<li>Mở ứng dụng <b>Sileo</b> trên thiết bị của bạn.</li>
-<li>Thêm link nguồn sau vào Sileo: <a href="https://poomsmart.github.io" target="_blank"><b>https://poomsmart.github.io</b></a></li>
-<li>Tìm kiếm và tải về tweak có tên là <b>Legacy</b>.</li>
-<li>Hoàn tất cài đặt để sử dụng YouTube.</li>
-</ol>
-
-<h2>Thông tin</h2>
-<ul>
-<li>Jailbreak hỗ trợ: Chimera</li>
-<li>Ngôn ngữ: Tiếng Việt</li>
-<li>Tác giả: Khanh 81GLI</li>
-</ul>
 
 </body>
 </html>
