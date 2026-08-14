@@ -316,15 +316,16 @@ a:hover {
     <h2>🔧 Hướng dẫn fix YouTube cũ</h2>
     <ol>
         <li>Mở ứng dụng <b>Sileo</b> trên thiết bị.</li>
-        <li>Thêm link nguồn: <a href="https://poomsmart.github.io" target="_blank"><b>https://poomsmart.github.io</b></a>[span_4](start_span)[span_4](end_span)</li>
+        <li>Thêm link nguồn: <a href="https://poomsmart.github.io" target="_blank"><b>https://poomsmart.github.io</b></a>[span_0](start_span)[span_0](end_span)</li>
         <li>Tìm và tải về tweak <b>Legacy</b> để sử dụng YouTube bình thường.</li>
     </ol>
 
     <h2>ℹ️ Thông tin</h2>
     <ul>
-        <li><b>Jailbreak hỗ trợ:</b> Chimera[span_5](start_span)[span_5](end_span)</li>
-        <li><b>Ngôn ngữ:</b> Tiếng Việt[span_6](start_span)[span_6](end_span)</li>
-        <li><b>Tác giả:</b> Khanh 81GLI[span_7](start_span)[span_7](end_span)</li>
+        <li><b>Jailbreak hỗ trợ:</b> Chimera[span_1](start_span)[span_1](end_span)</li>
+        <li><b>Ngôn ngữ:</b> Tiếng Việt[span_2](start_span)[span_2](end_span)</li>
+        <li><b>Tác giả:</b> Khanh 81GLI[span_3](start_span)[span_3](end_span)</li>
+        <li><b>Phiên bản:</b> <span id="displayVersion">Đang tải...</span></li>
     </ul>
 
     <!-- Nút Cập nhật / Xóa Cache thủ công -->
@@ -409,18 +410,23 @@ async function checkAppVersion() {
         let response = await fetch('./version.json?t=' + Date.now());
         let data = await response.json();
         let remoteVersion = data.version;
+        
+        // Hiển thị số phiên bản ra giao diện
+        document.getElementById("displayVersion").innerHTML = "v" + remoteVersion;
+
         let localVersion = localStorage.getItem('app_version');
 
         if (!localVersion) {
             localStorage.setItem('app_version', remoteVersion);
         } else if (localVersion !== remoteVersion) {
             localStorage.setItem('app_version', remoteVersion);
-            if (confirm("🔥 Đã có phiên bản cập nhật mới! Tải lại ngay?")) {
+            if (confirm("🔥 Đã có phiên bản cập nhật mới (v" + remoteVersion + ")! Tải lại ngay?")) {
                 updateApp();
             }
         }
     } catch (e) {
         console.log("Đang ngoại tuyến hoặc không thể kiểm tra version.json");
+        document.getElementById("displayVersion").innerHTML = "v1.0.0 (Offline)";
     }
 }
 
@@ -454,6 +460,8 @@ if ('serviceWorker' in navigator) {
             console.log('Lỗi đăng ký Offline: ', err);
         });
     });
+} else {
+    checkAppVersion();
 }
 
 window.onerror = function(message, source, lineno, colno, error) {
