@@ -235,7 +235,7 @@ a:hover {
     font-size: 15px;
 }
 
-/* Nút cập nhật app / xóa cache */
+/* Khu vực thanh tiến trình cập nhật phần trăm */
 .update-section {
     text-align: center;
     margin-top: 25px;
@@ -253,6 +253,30 @@ a:hover {
 .btn-update:hover {
     border-color: #007aff;
     color: #007aff;
+}
+.progress-container {
+    display: none;
+    max-width: 300px;
+    margin: 10px auto 0 auto;
+}
+.progress-bar-bg {
+    background: var(--border-color);
+    border-radius: 10px;
+    overflow: hidden;
+    height: 8px;
+    width: 100%;
+}
+.progress-bar-fill {
+    background: #34c759;
+    width: 0%;
+    height: 100%;
+    transition: width 0.1s linear;
+}
+.progress-text {
+    font-size: 12px;
+    color: var(--sub-text);
+    margin-top: 6px;
+    display: block;
 }
 
 .console-wrapper::-webkit-scrollbar { width: 8px; }
@@ -328,9 +352,15 @@ a:hover {
         <li><b>Phiên bản:</b> <span id="displayVersion">v1.0.0</span></li>
     </ul>
 
-    <!-- Nút Cập nhật / Xóa Cache thủ công -->
+    <!-- Nút Cập nhật / Xóa Cache với thanh tiến trình % -->
     <div class="update-section">
-        <button class="btn-update" onclick="updateApp()">🔄 Kiểm tra cập nhật / Làm mới App</button>
+        <button class="btn-update" id="updateBtn" onclick="updateApp()">🔄 Kiểm tra cập nhật / Làm mới App</button>
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progressBarFill"></div>
+            </div>
+            <span class="progress-text" id="progressText">Đang làm mới: 0%</span>
+        </div>
     </div>
 </div>
 
@@ -404,8 +434,8 @@ setInterval(function() {
     document.getElementById("uptimeCounter").innerHTML = "⏱️ Uptime: " + hrs + "h " + mins + "m " + secs + "s";
 }, 1000);
 
-// --- KIỂM TRA PHIÊN BẢN TỰ ĐỘNG TỪ version.json ---
-async function checkAppVersion() {
+// --- KIỂM TRA PHIÊN BẢN TỰ ĐỘNG TỪ version.json (KHÔNG POPUP PHIỀN PHỨC) ---
+async function checkAppVersion(isManual = false) {
     try {
         let response = await fetch('./version.json?t=' + Date.now());
         let data = await response.json();
@@ -419,33 +449,55 @@ async function checkAppVersion() {
             localStorage.setItem('app_version', remoteVersion);
         } else if (localVersion !== remoteVersion) {
             localStorage.setItem('app_version', remoteVersion);
-            if (confirm("🔥 Đã có phiên bản cập nhật mới (v" + remoteVersion + ")! Tải lại ngay?")) {
-                updateApp();
-            }
+            // Tự động cập nhật ngầm luôn thay vì hỏi popup
+            updateApp();
+        } else if (isManual) {
+            updateApp();
         }
     } catch (e) {
         console.log("Đang ngoại tuyến hoặc không thể kiểm tra version.json");
+        document.getElementById("displayVersion").innerHTML = "v1.0.0 (Offline)";
+        if (isManual) {
+            updateApp();
+        }
     }
 }
 
-// --- NÚT XÓA CACHE CẬP NHẬT APP ---
+// --- THANH TIẾN TRÌNH CHẠY % KHI CẬP NHẬT ---
 function updateApp() {
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-            for(var i = 0; i < registrations.length; i++) {
-                registrations[i].unregister();
-            }
-            caches.keys().then(function(names) {
-                for (var j = 0; j < names.length; j++) {
-                    caches.delete(names[j]);
-                }
-                alert("✨ Đã xóa dữ liệu cũ! Trang web sẽ được tải lại.");
+    var btn = document.getElementById("updateBtn");
+    var container = document.getElementById("progressContainer");
+    var fill = document.getElementById("progressBarFill");
+    var text = document.getElementById("progressText");
+
+    btn.style.display = "none";
+    container.style.display = "block";
+
+    var percent = 0;
+    var interval = setInterval(function() {
+        percent += 5;
+        if (percent <= 100) {
+            fill.style.width = percent + "%";
+            text.innerHTML = "Đang làm mới hệ thống: " + percent + "%";
+        } else {
+            clearInterval(interval);
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(var i = 0; i < registrations.length; i++) {
+                        registrations[i].unregister();
+                    }
+                    caches.keys().then(function(names) {
+                        for (var j = 0; j < names.length; j++) {
+                            caches.delete(names[j]);
+                        }
+                        location.reload();
+                    });
+                });
+            } else {
                 location.reload();
-            });
-        });
-    } else {
-        location.reload();
-    }
+            }
+        }
+    }, 40);
 }
 
 // KÍCH HOẠT CHẾ ĐỘ OFFLINE & TỰ KIỂM TRA PHIÊN BẢN
@@ -453,13 +505,13 @@ if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
         navigator.serviceWorker.register('./sw.js').then(function(registration) {
             console.log('Chế độ Offline đã sẵn sàng:', registration.scope);
-            checkAppVersion();
+            checkAppVersion(false);
         }, function(err) {
             console.log('Lỗi đăng ký Offline: ', err);
         });
     });
 } else {
-    checkAppVersion();
+    checkAppVersion(false);
 }
 
 window.onerror = function(message, source, lineno, colno, error) {
