@@ -46,9 +46,16 @@ h1{
     font-size:22px;
     cursor:pointer;
     margin:20px 0;
+    transition: all 0.3s ease;
+    min-width: 180px;
 }
 .button:hover{
     background:#dcdce0;
+}
+.button:disabled {
+    background: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
 }
 #log{
     color:red;
@@ -93,17 +100,44 @@ window.onerror = function(message, source, lineno, colno, error) {
     }
     return true;
 };
+
+// Hàm chạy tiến trình %
 function startJB() {
-    document.getElementById("status").innerHTML =
-    "⏳ Đang tiến hành Jailbreak, vui lòng đợi...";
-    setTimeout(function() {
-        try {
-            pwn();
-        } catch (e) {
-            document.getElementById("status").innerHTML =
-            "❌ Jailbreak thất bại.";
+    var btn = document.getElementById("jbButton");
+    var statusEl = document.getElementById("status");
+    
+    // Vô hiệu hóa nút để tránh người dùng bấm 2 lần
+    btn.disabled = true;
+    
+    var progress = 0;
+    
+    // Cập nhật % mỗi 150ms
+    var interval = setInterval(function() {
+        // Tăng % ngẫu nhiên từ 5 đến 15 để tạo cảm giác chân thực
+        progress += Math.floor(Math.random() * 11) + 5; 
+        
+        if (progress >= 100) {
+            progress = 100;
+            clearInterval(interval);
+            
+            btn.innerHTML = "Đang thực thi 100%";
+            statusEl.innerHTML = "⏳ Đang chạy mã Jailbreak, vui lòng đợi...";
+            
+            // Delay 300ms để trình duyệt kịp hiển thị 100% trước khi hàm pwn() làm đơ UI
+            setTimeout(function() {
+                try {
+                    pwn();
+                } catch (e) {
+                    statusEl.innerHTML = "❌ Jailbreak thất bại.";
+                    btn.innerHTML = "Thử lại";
+                    btn.disabled = false;
+                }
+            }, 300);
+        } else {
+            btn.innerHTML = "Đang xử lý " + progress + "%";
+            statusEl.innerHTML = "⏳ Đang chuẩn bị môi trường... " + progress + "%";
         }
-    }, 500);
+    }, 150);
 }
 </script>
 
@@ -111,7 +145,7 @@ function startJB() {
 <p>
 Công cụ hỗ trợ khởi Re-jailbreak bằng Chimera trên các thiết bị tương thích.
 </p>
-<button class="button" onclick="startJB();">
+<button id="jbButton" class="button" onclick="startJB();">
 Khởi chạy
 </button>
 <p id="status"></p>
