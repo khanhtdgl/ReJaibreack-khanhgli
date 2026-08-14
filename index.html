@@ -158,6 +158,25 @@ a:hover {
     text-decoration: underline;
 }
 
+/* Khung hướng dẫn cài đặt Offline */
+.offline-guide {
+    background: #f2f8ff;
+    border: 1px solid #cce5ff;
+    padding: 15px 20px;
+    border-radius: 16px;
+    margin-top: 30px;
+}
+.offline-guide h3 {
+    margin-top: 0;
+    color: #007aff;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+.offline-guide p {
+    margin: 5px 0;
+    font-size: 15px;
+}
+
 .console-wrapper::-webkit-scrollbar { width: 8px; }
 .console-wrapper::-webkit-scrollbar-track { background: #111; border-radius: 12px; }
 .console-wrapper::-webkit-scrollbar-thumb { background: #4af626; border-radius: 12px; }
@@ -168,6 +187,12 @@ a:hover {
     .subtitle { color: #aeaeb2; }
     h2 { border-bottom: 1px solid #38383a; }
     .button:disabled { background: #38383a; color: #8e8e93; }
+    
+    .offline-guide {
+        background: #151d29;
+        border-color: #1e3a5f;
+    }
+    .offline-guide h3 { color: #0a84ff; }
 }
 </style>
 </head>
@@ -191,20 +216,27 @@ a:hover {
         <div id="consoleText"></div>
     </div>
 
+    <!-- KHU VỰC HƯỚNG DẪN CÀI ĐẶT APP OFFLINE MỚI -->
+    <div class="offline-guide">
+        <h3>📲 Cài đặt App (Dùng Offline)</h3>
+        <p>Bấm vào biểu tượng <b>Chia sẻ 📤</b> ở dưới cùng màn hình Safari.</p>
+        <p>Chọn <b>Thêm vào MH chính ➕</b> (Add to Home Screen).</p>
+        <p><i>Lưu ý: Sau khi cài, bạn có thể mở App để Jailbreak bất cứ lúc nào kể cả khi <b>không có mạng (Máy bay)</b>.</i></p>
+    </div>
+
     <h2>✨ Tính năng</h2>
     <ul>
         <li>Hỗ trợ Re-jailbreak bằng Chimera.</li>
         <li>Giao diện đơn giản, hiện đại và tối ưu hóa trải nghiệm.</li>
-        <li>Hỗ trợ chạy ngoại tuyến (Không cần mạng).</li>
+        <li>Hỗ trợ chạy ngoại tuyến (Không cần kết nối Internet).</li>
         <li>Tối ưu cho iPhone và iPad iOS 12.x trở xuống.</li>
     </ul>
 
     <h2>📖 Hướng dẫn sử dụng</h2>
     <ol>
-        <li>Chọn <b>Thêm vào MH chính</b> (Add to Home Screen) trên Safari để tải App.</li>
         <li>Mở App từ màn hình chính và nhấn <b>Khởi chạy ngay</b>.</li>
         <li>Khi thông báo <b>"Building JOP chain..."</b> hiện ra, nhấn <b>Đóng</b>.</li>
-        <li>Chờ quá trình hoàn tất.</li>
+        <li>Chờ quá trình khai thác hoàn tất.</li>
         <li>Khi hiện <b>"re-jailbreak done"</b>, nhấn <b>"userspace reboot"</b>.</li>
     </ol>
 
@@ -212,7 +244,7 @@ a:hover {
     <ol>
         <li>Mở ứng dụng <b>Sileo</b> trên thiết bị.</li>
         <li>Thêm link nguồn: <a href="https://poomsmart.github.io" target="_blank"><b>https://poomsmart.github.io</b></a></li>
-        <li>Tìm và tải về tweak <b>Legacy</b> để sử dụng YouTube.</li>
+        <li>Tìm và tải về tweak <b>Legacy</b> để sử dụng YouTube bình thường.</li>
     </ol>
 
     <h2>ℹ️ Thông tin</h2>
