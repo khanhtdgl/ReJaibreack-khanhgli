@@ -316,31 +316,30 @@ a:hover {
     <h2>🔧 Hướng dẫn fix YouTube cũ</h2>
     <ol>
         <li>Mở ứng dụng <b>Sileo</b> trên thiết bị.</li>
-        <li>Thêm link nguồn: <a href="https://poomsmart.github.io" target="_blank"><b>https://poomsmart.github.io</b></a></li>
+        <li>Thêm link nguồn: <a href="https://poomsmart.github.io" target="_blank"><b>https://poomsmart.github.io</b></a>[span_4](start_span)[span_4](end_span)</li>
         <li>Tìm và tải về tweak <b>Legacy</b> để sử dụng YouTube bình thường.</li>
     </ol>
 
     <h2>ℹ️ Thông tin</h2>
     <ul>
-        <li><b>Jailbreak hỗ trợ:</b> Chimera</li>
-        <li><b>Ngôn ngữ:</b> Tiếng Việt</li>
-        <li><b>Tác giả:</b> Khanh 81GLI</li>
+        <li><b>Jailbreak hỗ trợ:</b> Chimera[span_5](start_span)[span_5](end_span)</li>
+        <li><b>Ngôn ngữ:</b> Tiếng Việt[span_6](start_span)[span_6](end_span)</li>
+        <li><b>Tác giả:</b> Khanh 81GLI[span_7](start_span)[span_7](end_span)</li>
     </ul>
 
-    <!-- Nút Cập nhật / Xóa Cache -->
+    <!-- Nút Cập nhật / Xóa Cache thủ công -->
     <div class="update-section">
         <button class="btn-update" onclick="updateApp()">🔄 Kiểm tra cập nhật / Làm mới App</button>
     </div>
 </div>
 
 <script>
-// --- TÍNH NĂNG 1: KIỂM TRA THIẾT BỊ VÀ TƯƠNG THÍCH iOS ---
+// --- KIỂM TRA THIẾT BỊ VÀ TƯƠNG THÍCH iOS ---
 function checkDeviceCompatibility() {
     var ua = navigator.userAgent;
     var btn = document.getElementById("jbButton");
     var statusEl = document.getElementById("deviceStatus");
     
-    // Kiểm tra xem có phải thiết bị iOS hay không
     var isIOS = /iP(hone|od|ad)/.test(ua);
     var match = ua.match(/OS (\d+)_(\d+)_?(\d+)?/);
     
@@ -373,7 +372,7 @@ function checkDeviceCompatibility() {
 }
 checkDeviceCompatibility();
 
-// --- TÍNH NĂNG 2: CÔNG TẮC ĐỔI GIAO DIỆN (DARK / LIGHT MODE) ---
+// --- CÔNG TẮC ĐỔI GIAO DIỆN (DARK / LIGHT MODE) ---
 function toggleTheme() {
     var html = document.documentElement;
     var btn = document.getElementById("themeBtn");
@@ -389,13 +388,12 @@ function toggleTheme() {
     }
 }
 
-// Khôi phục giao diện đã lưu
 if (localStorage.getItem("theme") === "dark" || (!localStorage.getItem("theme") && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
     document.documentElement.setAttribute("data-theme", "dark");
     document.getElementById("themeBtn").innerHTML = "☀️";
 }
 
-// --- TÍNH NĂNG 3: BỘ ĐẾM THỜI GIAN UPTIME (GIẢ LẬP TỪ LÚC MỞ WEB) ---
+// --- BỘ ĐẾM THỜI GIAN UPTIME ---
 var startTime = Date.now();
 setInterval(function() {
     var seconds = Math.floor((Date.now() - startTime) / 1000);
@@ -405,7 +403,28 @@ setInterval(function() {
     document.getElementById("uptimeCounter").innerHTML = "⏱️ Uptime: " + hrs + "h " + mins + "m " + secs + "s";
 }, 1000);
 
-// --- TÍNH NĂNG 4: NÚT LÀM MỚI / XÓA CACHE CẬP NHẬT APP ---
+// --- KIỂM TRA PHIÊN BẢN TỰ ĐỘNG TỪ version.json ---
+async function checkAppVersion() {
+    try {
+        let response = await fetch('./version.json?t=' + Date.now());
+        let data = await response.json();
+        let remoteVersion = data.version;
+        let localVersion = localStorage.getItem('app_version');
+
+        if (!localVersion) {
+            localStorage.setItem('app_version', remoteVersion);
+        } else if (localVersion !== remoteVersion) {
+            localStorage.setItem('app_version', remoteVersion);
+            if (confirm("🔥 Đã có phiên bản cập nhật mới! Tải lại ngay?")) {
+                updateApp();
+            }
+        }
+    } catch (e) {
+        console.log("Đang ngoại tuyến hoặc không thể kiểm tra version.json");
+    }
+}
+
+// --- NÚT XÓA CACHE CẬP NHẬT APP ---
 function updateApp() {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(function(registrations) {
@@ -416,7 +435,7 @@ function updateApp() {
                 for (var j = 0; j < names.length; j++) {
                     caches.delete(names[j]);
                 }
-                alert("✨ Đã xóa dữ liệu cũ! Trang web sẽ được tải lại để cập nhật phiên bản mới nhất.");
+                alert("✨ Đã xóa dữ liệu cũ! Trang web sẽ được tải lại.");
                 location.reload();
             });
         });
@@ -425,11 +444,12 @@ function updateApp() {
     }
 }
 
-// KÍCH HOẠT CHẾ ĐỘ OFFLINE SERVICE WORKER
+// KÍCH HOẠT CHẾ ĐỘ OFFLINE & TỰ KIỂM TRA PHIÊN BẢN
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
         navigator.serviceWorker.register('./sw.js').then(function(registration) {
             console.log('Chế độ Offline đã sẵn sàng:', registration.scope);
+            checkAppVersion();
         }, function(err) {
             console.log('Lỗi đăng ký Offline: ', err);
         });
@@ -452,7 +472,7 @@ window.onerror = function(message, source, lineno, colno, error) {
     return true;
 };
 
-// Hàm tạo Console Hacker chạy Jailbreak
+// Hàm chạy Jailbreak
 function startJB() {
     var btn = document.getElementById("jbButton");
     var consoleWrapper = document.getElementById("consoleWrapper");
