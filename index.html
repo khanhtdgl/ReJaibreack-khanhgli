@@ -167,91 +167,6 @@ a:hover {
     border-radius: 12px;
 }
 
-/* KHU VỰC TẢI MÃ NGUỒN - THIẾT KẾ MỚI CỰC ĐẸP */
-.dev-box {
-    background: #f8f9fa;
-    border: 1px solid #e5e5ea;
-    padding: 30px 20px;
-    border-radius: 20px;
-    margin-top: 40px;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-}
-.dev-box h2 {
-    margin-top: 0;
-    border-bottom: none;
-    justify-content: center;
-    font-size: 22px;
-}
-.dev-box p {
-    font-size: 15px;
-    color: #8e8e93;
-    margin-bottom: 25px;
-}
-.pwd-container {
-    display: flex;
-    flex-direction: column; /* Xếp dọc để nhìn to và rõ hơn */
-    gap: 15px;
-    max-width: 280px;
-    margin: 0 auto;
-}
-.input-pwd {
-    width: 100%;
-    padding: 16px;
-    border: 2px solid #e5e5ea;
-    border-radius: 16px;
-    font-size: 24px;
-    text-align: center;
-    letter-spacing: 12px; /* Giãn chữ cực rộng giống Passcode iOS */
-    font-weight: bold;
-    outline: none;
-    background: #ffffff;
-    box-sizing: border-box;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    color: #1c1c1e;
-}
-.input-pwd::placeholder {
-    letter-spacing: 2px;
-    font-size: 16px;
-    font-weight: normal;
-    color: #c7c7cc;
-}
-.input-pwd:focus {
-    border-color: #007aff;
-    box-shadow: 0 8px 20px rgba(0, 122, 255, 0.15);
-    transform: translateY(-2px);
-}
-.btn-download {
-    width: 100%;
-    background: linear-gradient(135deg, #34c759, #28a745);
-    color: #fff;
-    border: none;
-    padding: 16px;
-    border-radius: 16px;
-    font-size: 18px;
-    font-weight: 700;
-    cursor: pointer;
-    box-sizing: border-box;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
-    box-shadow: 0 6px 15px rgba(52, 199, 89, 0.3);
-}
-.btn-download:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(52, 199, 89, 0.4);
-}
-.btn-download:active {
-    transform: translateY(1px);
-    box-shadow: 0 4px 10px rgba(52, 199, 89, 0.3);
-}
-.download-status {
-    margin-top: 15px;
-    font-weight: 600;
-    font-size: 15px;
-    min-height: 22px;
-}
-
 /* Hỗ trợ Dark Mode */
 @media (prefers-color-scheme: dark) {
     body {
@@ -271,20 +186,6 @@ a:hover {
     .button:disabled {
         background: #38383a;
         color: #8e8e93;
-    }
-    
-    .dev-box {
-        background: #151516;
-        border-color: #2c2c2e;
-        box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.02);
-    }
-    .input-pwd {
-        background: #2c2c2e;
-        border-color: #38383a;
-        color: #ffffff;
-    }
-    .input-pwd:focus {
-        border-color: #0a84ff;
     }
 }
 </style>
@@ -342,21 +243,6 @@ a:hover {
         <li><b>Ngôn ngữ:</b> Tiếng Việt</li>
         <li><b>Tác giả:</b> Khanh 81GLI</li>
     </ul>
-
-    <!-- HỘP TẢI MÃ NGUỒN GIAO DIỆN MỚI -->
-    <div class="dev-box">
-        <h2>🔒 Khu Vực Mã Nguồn</h2>
-        <p>Nhập mã PIN (6 số) để tải tệp hệ thống.</p>
-        <div class="pwd-container">
-            <!-- 
-              inputmode="numeric" và pattern="[0-9]*" giúp bắt buộc gọi Bàn Phím Số trên iOS/Android 
-              maxlength="6" giới hạn chỉ được nhập đúng 6 số
-            -->
-            <input type="password" id="sourcePwd" class="input-pwd" placeholder="Nhập PIN" inputmode="numeric" pattern="[0-9]*" maxlength="6">
-            <button class="btn-download" onclick="downloadSource()">TẢI XUỐNG ZIP</button>
-        </div>
-        <div id="downloadStatus" class="download-status"></div>
-    </div>
 </div>
 
 <script>
@@ -439,46 +325,6 @@ function startJB() {
             }, 800);
         }
     }, 250);
-}
-
-// Hàm tải mã nguồn dạng ZIP
-function downloadSource() {
-    var pwdInput = document.getElementById("sourcePwd").value;
-    var statusText = document.getElementById("downloadStatus");
-    
-    var correctPwd = "944151"; 
-
-    statusText.innerHTML = "";
-
-    if (pwdInput === "") {
-        statusText.style.color = "#ff3b30";
-        statusText.innerHTML = "⚠️ Vui lòng nhập mã PIN!";
-        return;
-    }
-
-    if (pwdInput === correctPwd) {
-        statusText.style.color = "#34c759"; 
-        statusText.innerHTML = "✅ PIN chính xác! Đang tải tệp ZIP...";
-        
-        var zipUrl = "ReJailbreak_Source.zip"; 
-        
-        var a = document.createElement("a");
-        a.href = zipUrl;
-        a.download = "ReJailbreak_Source.zip";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        
-        setTimeout(function() {
-            document.getElementById("sourcePwd").value = "";
-            statusText.innerHTML = "";
-        }, 3000);
-
-    } else {
-        statusText.style.color = "#ff3b30"; 
-        statusText.innerHTML = "❌ Mã PIN không chính xác!";
-        document.getElementById("sourcePwd").value = "";
-    }
 }
 </script>
 
