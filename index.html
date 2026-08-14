@@ -119,15 +119,16 @@ h1 {
     font-size: 17px;
 }
 
-/* Thanh trạng thái kiểm tra thiết bị */
+/* Thanh trạng thái thông minh (Thiết bị & Ping) */
 .status-bar {
+    display: flex;
+    justify-content: space-between;
     background: var(--border-color);
     padding: 10px 15px;
     border-radius: 12px;
     font-size: 13px;
     margin-bottom: 20px;
     color: var(--sub-text);
-    text-align: center;
 }
 
 .button-container {
@@ -294,9 +295,10 @@ a:hover {
         Công cụ hỗ trợ khởi Re-jailbreak bằng Chimera trên các thiết bị tương thích.
     </p>
 
-    <!-- Thanh trạng thái kiểm tra iOS -->
+    <!-- Thanh trạng thái (Thiết bị & Ping mạng) -->
     <div class="status-bar">
         <span id="deviceStatus">🔍 Đang kiểm tra thiết bị...</span>
+        <span id="pingStatus">📶 Ping: Đang đo...</span>
     </div>
 
     <p id="log"></p>
@@ -322,9 +324,16 @@ a:hover {
     <h2>✨ Tính năng</h2>
     <ul>
         <li>Hỗ trợ Re-jailbreak bằng Chimera.</li>
-        <li>Tự động nhận diện thiết bị và trạng thái hệ thống.</li>
+        <li>Tự động nhận diện thiết bị và đo độ trễ mạng (Ping).</li>
         <li>Hỗ trợ chạy ngoại tuyến hoàn toàn (Không cần Internet).</li>
         <li>Tối ưu riêng cho iPhone và iPad iOS 12.x trở xuống.</li>
+    </ul>
+
+    <h2>📱 Danh sách thiết bị hỗ trợ</h2>
+    <ul>
+        <li><b>iPhone:</b> iPhone 5s, 6, 6 Plus, 6s, 6s Plus, SE, 7, 7 Plus, 8, 8 Plus, X (iOS 12.0 - 12.5.7)</li>
+        <li><b>iPad:</b> iPad Air, Air 2, Mini 2, 3, 4, iPad 2017, 2018, iPad Pro (iOS 12.0 - 12.5.7)</li>
+        <li><b>iPod touch:</b> iPod touch Gen 6 (iOS 12.0 - 12.5.7)</li>
     </ul>
 
     <h2>📖 Hướng dẫn sử dụng</h2>
@@ -363,6 +372,29 @@ a:hover {
 </div>
 
 <script>
+// --- TÍNH NĂNG 1: ĐO PING / ĐỘ TRỄ MẠNG ---
+function measurePing() {
+    var pingEl = document.getElementById("pingStatus");
+    var startTime = Date.now();
+    
+    // Tải một file nhẹ (ví dụ icon.png hoặc chính trang web) để đo độ trễ
+    fetch('./version.json?t=' + startTime, { method: 'HEAD', cache: 'no-store' })
+    .then(function() {
+        var duration = Date.now() - startTime;
+        pingEl.innerHTML = "📶 Ping: " + duration + "ms";
+        if (duration < 200) {
+            pingEl.style.color = "#34c759"; // Mạng mượt
+        } else {
+            pingEl.style.color = "#ff9500"; // Mạng hơi chậm
+        }
+    })
+    .catch(function() {
+        pingEl.innerHTML = "📶 Ngoại tuyến";
+        pingEl.style.color = "#8e8e93";
+    });
+}
+measurePing();
+
 // --- KIỂM TRA THIẾT BỊ VÀ TƯƠNG THÍCH iOS ---
 function checkDeviceCompatibility() {
     var ua = navigator.userAgent;
